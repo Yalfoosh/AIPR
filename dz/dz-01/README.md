@@ -1,4 +1,4 @@
-# Analiza i projektiranje računalom: 1. laboratorijska vježba
+# Analiza i projektiranje računalom: 1. domaća zadaća
 
 ## Instalacija
 
@@ -10,9 +10,8 @@ Aktivirajte okruženje, npr. `conda activate env_name`. Pozicionirajte se u kori
 
 ## Pokretanje
 
-Uđite u `demo` direktorij. Pokrenite `jupyter notebook`. Otvorite `AIPR_2020-21_lab-01.ipynb`.
+Uđite u `demo` direktorij. Pokrenite `jupyter notebook`. Otvorite `AIPR_2020-21_dz-01.ipynb`.
 
 ## Razgledavanje
 
 U `docs/demo` direktoriju nalazi se izvršena bilježnica u LaTeX PDF formatu. U `src` direktoriju se nalazi cijela implementacija.
-
