@@ -6,7 +6,9 @@ from .exceptions import MatrixNotBroadcastableException, MatrixShapeMismatchExce
 
 
 class MatrixConfig:
-    def __init__(self, height: int, width: int, dtype: Callable):
+    def __init__(
+        self, height: int, width: int, dtype: Callable, epsilon: Union[float, int]
+    ):
         if height is None:
             raise TypeError("Argument height mustn't be None!")
 
@@ -15,6 +17,9 @@ class MatrixConfig:
 
         if dtype is None:
             raise TypeError("Argument dtype mustn't be None!")
+
+        if epsilon is None:
+            raise TypeError("Argument epsilon mustn't be None!")
 
         if not isinstance(height, int):
             raise TypeError(
@@ -36,6 +41,16 @@ class MatrixConfig:
                 )
             )
 
+        if not isinstance(epsilon, (float, int)):
+            raise TypeError(
+                dedent(
+                    f"""\
+                    Expected argument epsilon to be a float or int, instead it is \
+                    {type(epsilon)}.\
+                    """
+                )
+            )
+
         if height < 1:
             raise ValueError(
                 f"Expected argument height to be 1 or greater, instead it is {height}."
@@ -46,21 +61,35 @@ class MatrixConfig:
                 f"Expected argument width to be 1 or greater, instead it is {width}."
             )
 
+        if epsilon < 0:
+            raise ValueError(
+                dedent(
+                    f"""\
+                    Expected argument epsilon to be 0 or greater, instead it is \
+                    {epsilon}.\
+                    """
+                )
+            )
+
         self.shape = (height, width)
         self.dtype = dtype
+        self.epsilon = float(epsilon)
 
 
 class Matrix:
     def __init__(
         self,
-        height: int,
-        width: int,
+        height: Optional[int] = None,
+        width: Optional[int] = None,
         dtype: Callable = float,
+        epsilon: float = 1e-13,
         config: Optional[MatrixConfig] = None,
         **kwargs,
     ):
         if config is None:
-            config = MatrixConfig(height=height, width=width, dtype=dtype)
+            config = MatrixConfig(
+                height=height, width=width, dtype=dtype, epsilon=epsilon
+            )
 
         self._config = copy.deepcopy(config)
         self._data = list()
@@ -92,11 +121,32 @@ class Matrix:
 
     @property
     def epsilon(self):
-        return 1e-13
+        return self._config.epsilon
+
+    @epsilon.setter
+    def epsilon(self, value: Union[float, int]):
+        if value is None:
+            raise TypeError("Argument value mustn't be None!")
+
+        if not isinstance(value, (float, int)):
+            raise TypeError(
+                dedent(
+                    f"""\
+                    Expected argument other to be a float or int, instead it is \
+                    {type(value)}.\
+                    """
+                )
+            )
+
+        self._config.epsilon = float(value)
 
     @property
     def EPS(self):
         return self.epsilon
+
+    @property
+    def T(self):
+        return self.transposed()
 
     # endregion
 
@@ -297,7 +347,7 @@ class Matrix:
         for i in range(len(self._data)):
             for j in range(len(self._data[i])):
                 if self._data[i][j] is not None:
-                    self._data[i][j] = self.dtype(self._data[i][j])
+                    self._data[i][j] = self.dtype(self._data[i][j] + 0.5)
 
     def float(self):
         self._config.dtype = float
@@ -310,29 +360,30 @@ class Matrix:
     # endregion
 
     # region Arithmetic Methods
+    def abs(self):
+        for i in range(self.height):
+            for j in range(self.width):
+                self[i][j] = abs(self[i][j])
+
     def add(self, other: Union[float, int, "Matrix"]):
-        if isinstance(other, (float, int)):
-            to_swap = Matrix(height=self.height, width=self.width, dtype=type(other))
-            to_swap.fill(other)
-
-            other = to_swap
-
-        if not isinstance(other, Matrix):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do matrix addition: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
             raise TypeError(
                 dedent(
                     f"""\
-                    Expected argument other to eventually be a Matrix, instead it is \
-                    {type(other)}.\
-                    """
-                )
-            )
-
-        if self.shape != other.shape:
-            raise MatrixShapeMismatchException(
-                dedent(
-                    f"""\
-                    Failed to do matrix addition: shapes {self.shape} & {other.shape} \
-                    do not match.\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
                     """
                 )
             )
@@ -340,33 +391,65 @@ class Matrix:
         if other.dtype == float:
             self.float()
 
-        for i in range(len(self)):
-            for j in range(len(self[i])):
+        for i in range(self.height):
+            for j in range(self.width):
                 self[i][j] += other[i][j]
 
-    def sub(self, other: Union[float, int, "Matrix"]):
-        if isinstance(other, (float, int)):
-            to_swap = Matrix(height=self.height, width=self.width, dtype=type(other))
-            to_swap.fill(other)
-
-            other = to_swap
-
-        if not isinstance(other, Matrix):
+    def floordiv(self, other: Union[float, int, "Matrix"]):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do Hadamard whole division: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
             raise TypeError(
                 dedent(
                     f"""\
-                    Expected argument other to eventually be a Matrix, instead it is \
-                    {type(other)}.\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
                     """
                 )
             )
 
-        if self.shape != other.shape:
-            raise MatrixShapeMismatchException(
+        for i in range(self.height):
+            for j in range(self.width):
+                self[i][j] //= other[i][j]
+
+    def invert(self):
+        print("TODO INVERSION")
+
+    def inverted(self):
+        to_return = copy.deepcopy(self)
+        to_return.invert()
+
+        return to_return
+
+    def mod(self, other: Union[float, int, "Matrix"]):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do matrix modulus: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
+            raise TypeError(
                 dedent(
                     f"""\
-                    Failed to do matrix subtraction: shapes {self.shape} & \
-                    {other.shape} do not match.\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
                     """
                 )
             )
@@ -374,9 +457,9 @@ class Matrix:
         if other.dtype == float:
             self.float()
 
-        for i in range(len(self)):
-            for j in range(len(self[i])):
-                self[i][j] -= other[i][j]
+        for i in range(self.height):
+            for j in range(self.width):
+                self[i][j] %= other[i][j]
 
     def mul(self, other: Union[float, int, "Matrix"]):
         if isinstance(other, Matrix):
@@ -395,8 +478,8 @@ class Matrix:
             raise TypeError(
                 dedent(
                     f"""\
-                    Expected argument other to be a float or an int, instead it is \
-                    {type(other)}.\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
                     """
                 )
             )
@@ -404,9 +487,99 @@ class Matrix:
         if other.dtype == float:
             self.float()
 
+        for i in range(self.height):
+            for j in range(self.width):
+                self[i][j] *= other[i][j]
+
+    def negate(self):
         for i in range(len(self)):
             for j in range(len(self[i])):
-                self[i][j] *= other[i][j]
+                self[i][j] = -self[i][j]
+
+    def pow(self, other: Union[float, int, "Matrix"]):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do Hadamard power: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
+            raise TypeError(
+                dedent(
+                    f"""\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
+                    """
+                )
+            )
+
+        if other.dtype == float:
+            self.float()
+
+        for i in range(self.height):
+            for j in range(self.width):
+                self[i][j] **= other[i][j]
+
+        if self.dtype == int and other.dtype == int:
+            # Account for rounding errors
+            self += 0.25
+            self.int()
+
+    def sub(self, other: Union[float, int, "Matrix"]):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do matrix subtraction: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
+            raise TypeError(
+                dedent(
+                    f"""\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
+                    """
+                )
+            )
+
+        if other.dtype == float:
+            self.float()
+
+        for i in range(self.height):
+            for j in range(self.width):
+                self[i][j] -= other[i][j]
+
+    def transpose(self):
+        _new_data = list()
+
+        for j in range(self.width):
+            current_row = list()
+
+            for i in range(self.height):
+                current_row.append(self._data[i][j])
+
+            _new_data.append(current_row)
+
+        self._config.shape = self.width, self.height
+        self._data = _new_data
+
+    def transposed(self):
+        to_return = copy.deepcopy(self)
+        to_return.transpose()
+
+        return to_return
 
     def truediv(self, other: Union[float, int, "Matrix"]):
         if isinstance(other, Matrix):
@@ -425,17 +598,164 @@ class Matrix:
             raise TypeError(
                 dedent(
                     f"""\
-                    Expected argument other to be a float or an int, instead it is \
-                    {type(other)}.\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
                     """
                 )
             )
 
         self.float()
 
-        for i in range(len(self)):
-            for j in range(len(self[i])):
+        for i in range(self.height):
+            for j in range(self.width):
                 self[i][j] /= other[i][j]
+
+    # endregion
+
+    # region Comparison Methods
+    def __ordinary_equals(self, first, second):
+        return first == second
+
+    def __float_equals(self, first, second):
+        return abs(first - second) < self.epsilon
+
+    def equals(self, other: "Matrix"):
+        if other is None or not (
+            isinstance(other, Matrix) and self.shape == other.shape
+        ):
+            return False
+
+        comparison_function = self.__ordinary_equals
+
+        if self.dtype == float or other.dtype == float:
+            comparison_function = self.__float_equals
+
+        for i in range(self.height):
+            for j in range(self.width):
+                if not comparison_function(self[i][j], other[i][j]):
+                    return False
+
+        return True
+
+    def ge(self, other: Union[float, int, "Matrix"]):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do matrix comparison: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
+            raise TypeError(
+                dedent(
+                    f"""\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
+                    """
+                )
+            )
+
+        for i in range(self.height):
+            for j in range(self.width):
+                if self[i][j] < other[i][j]:
+                    return False
+
+        return True
+
+    def gt(self, other: Union[float, int, "Matrix"]):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do matrix comparison: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
+            raise TypeError(
+                dedent(
+                    f"""\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
+                    """
+                )
+            )
+
+        for i in range(self.height):
+            for j in range(self.width):
+                if self[i][j] <= other[i][j]:
+                    return False
+
+        return True
+
+    def le(self, other: Union[float, int, "Matrix"]):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do matrix comparison: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
+            raise TypeError(
+                dedent(
+                    f"""\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
+                    """
+                )
+            )
+
+        for i in range(self.height):
+            for j in range(self.width):
+                if self[i][j] > other[i][j]:
+                    return False
+
+        return True
+
+    def lt(self, other: Union[float, int, "Matrix"]):
+        if isinstance(other, Matrix):
+            if not self.shape == other.shape:
+                raise MatrixShapeMismatchException(
+                    dedent(
+                        f"""\
+                        Failed to do matrix comparison: shapes {self.shape} & \
+                        {other.shape} do not match.
+                        """
+                    )
+                )
+        elif isinstance(other, (float, int)):
+            other = Matrix.full(self.height, self.width, fill_value=other)
+        else:
+            raise TypeError(
+                dedent(
+                    f"""\
+                    Expected argument other to be a float, int, or Matrix, instead it \
+                    is {type(other)}.\
+                    """
+                )
+            )
+
+        for i in range(self.height):
+            for j in range(self.width):
+                if self[i][j] >= other[i][j]:
+                    return False
+
+        return True
 
     # endregion
 
@@ -467,13 +787,13 @@ class Matrix:
         )
 
         string_rows = [
-            ", ".join(
+            " ".join(
                 [" " * (max_str_len - len(element)) + f"{element}" for element in row]
             )
             for row in string_matrix
         ]
         translated_string_rows = [f"{left_space}{tab}[{x}]" for x in string_rows]
-        string_block = f",{newline_char}".join(translated_string_rows)
+        string_block = f"{newline_char}".join(translated_string_rows)
 
         to_return = (
             f"{left_space}[{newline_char}{string_block}{newline_char}{left_space}]"
@@ -507,15 +827,42 @@ class Matrix:
     # endregion
 
     # region Mathematical Dunder Methods
+    def __abs__(self):
+        to_return = copy.deepcopy(self)
+        to_return.abs()
+
+        return to_return
+
     def __add__(self, other: Union[float, int, "Matrix"]):
         to_return = copy.deepcopy(self)
         to_return.add(other)
 
         return to_return
 
-    def __truediv__(self, other: Union[float, int, "Matrix"]):
+    def __float__(self):
         to_return = copy.deepcopy(self)
-        to_return.truediv(other)
+        to_return.float()
+
+        return to_return
+
+    def __floordiv__(self, other: Union[float, int, "Matrix"]):
+        to_return = copy.deepcopy(self)
+        to_return.floordiv(other)
+
+        return to_return
+
+    def __int__(self):
+        to_return = copy.deepcopy(self)
+        to_return.int()
+
+        return to_return
+
+    def __invert__(self):
+        return self.inverted()
+
+    def __mod__(self, other: Union[float, int, "Matrix"]):
+        to_return = copy.deepcopy(self)
+        to_return.mod(other)
 
         return to_return
 
@@ -525,11 +872,88 @@ class Matrix:
 
         return to_return
 
+    def __neg__(self):
+        to_return = copy.deepcopy(self)
+        to_return.negate()
+
+        return to_return
+
+    def __pow__(self, other: Union[float, int, "Matrix"]):
+        to_return = copy.deepcopy(self)
+        to_return.pow(other)
+
+        return to_return
+
     def __sub__(self, other: Union[float, int, "Matrix"]):
         to_return = copy.deepcopy(self)
         to_return.sub(other)
 
         return to_return
+
+    def __truediv__(self, other: Union[float, int, "Matrix"]):
+        to_return = copy.deepcopy(self)
+        to_return.truediv(other)
+
+        return to_return
+
+    # endregion
+
+    # region Extended Mathematical Dunder Methods
+    def __iadd__(self, other: Union[float, int, "Matrix"]):
+        self.add(other)
+
+        return self
+
+    def __ifloordiv__(self, other: Union[float, int, "Matrix"]):
+        self.floordiv(other)
+
+        return self
+
+    def __imod__(self, other: Union[float, int, "Matrix"]):
+        self.mod(other)
+
+        return self
+
+    def __imul__(self, other: Union[float, int, "Matrix"]):
+        self.mul(other)
+
+        return self
+
+    def __ipow__(self, other: Union[float, int, "Matrix"]):
+        self.pow(other)
+
+        return self
+
+    def __isub__(self, other: Union[float, int, "Matrix"]):
+        self.sub(other)
+
+        return self
+
+    def __itruediv__(self, other: Union[float, int, "Matrix"]):
+        self.truediv(other)
+
+        return self
+
+    # endregion
+
+    # region Comparison Dunder Methods
+    def __eq__(self, other: Union[float, int, "Matrix"]):
+        return self.equals(other)
+
+    def __ge__(self, other: Union[float, int, "Matrix"]):
+        return self.ge(other)
+
+    def __gt__(self, other: Union[float, int, "Matrix"]):
+        return self.gt(other)
+
+    def __le__(self, other: Union[float, int, "Matrix"]):
+        return self.le(other)
+
+    def __lt__(self, other: Union[float, int, "Matrix"]):
+        return self.lt(other)
+
+    def __ne__(self, other: Union[float, int, "Matrix"]):
+        return not self.equals(other)
 
     # endregion
 
