@@ -6,3 +6,8 @@ class MatrixShapeMismatchException(Exception):
 class MatrixNotBroadcastableException(Exception):
     def __init__(self, message):
         super().__init__(message)
+
+
+class NotSolvable(Exception):
+    def __init__(self, message):
+        super().__init__(message)
