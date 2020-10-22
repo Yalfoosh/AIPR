@@ -10,7 +10,7 @@ Aktivirajte okruženje, npr. `conda activate env_name`. Pozicionirajte se u kori
 
 ## Pokretanje
 
-Uđite u `demo` direktorij. Pokrenite `jupyter notebook`. Otvorite `AIPR_2020-21_dz-01.ipynb`.
+Uđite u `demo` direktorij. Pokrenite `jupyter notebook`. Otvorite `demo-01_hw-01.ipynb`.
 
 ## Razgledavanje
 
