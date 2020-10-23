@@ -594,7 +594,6 @@ class Matrix:
         identity_matrix = Matrix.eye(
             height=self.height, width=self.width, dtype=self.dtype
         )
-        identity_matrix = p_matrix @ identity_matrix
 
         for j in range(self.width):
             current_column = lu_matrix.backward_substitute(
@@ -606,6 +605,8 @@ class Matrix:
                     temp_matrix.float()
 
                 temp_matrix[i][j] = current_column[0][i]
+
+        temp_matrix @= p_matrix
 
         self._config = copy.deepcopy(temp_matrix._config)
         self._data = copy.deepcopy(temp_matrix._data)
