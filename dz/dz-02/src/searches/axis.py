@@ -39,8 +39,8 @@ def clean_axis_search_arguments(
 
     if any(epsilon < 0):
         raise ValueError(
-            "Expected argument epsilon to be a vector of positive reals, instead it is "
-            f"{epsilon}."
+            "Expected argument epsilon to be a vector of positive floats, instead it "
+            f"is {epsilon}."
         )
 
     if not isinstance(max_iterations):

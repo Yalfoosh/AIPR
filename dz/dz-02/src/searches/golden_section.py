@@ -32,6 +32,11 @@ def clean_golden_section_search_arguments(
             f"Expected argument epsilon to be a float, instead it is {type(epsilon)}."
         )
 
+    if epsilon < 0:
+        raise ValueError(
+            "Expected argument epsilon to be a positive float, instead it is {epsilon}."
+        )
+
     if verbosity is None:
         verbosity = "none"
 
