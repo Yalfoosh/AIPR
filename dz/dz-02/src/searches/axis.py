@@ -37,6 +37,12 @@ def clean_axis_search_arguments(
             f"{type(epsilon)}."
         )
 
+    if any(epsilon < 0):
+        raise ValueError(
+            "Expected argument epsilon to be a vector of positive reals, instead it is "
+            f"{epsilon}."
+        )
+
     if not isinstance(max_iterations):
         raise TypeError(
             "Expected argument max_interations to be an int, instead it is "
