@@ -11,11 +11,15 @@ class Function:
         self._call_count = 0
 
     @property
-    def call_count(self):
+    def function_object(self) -> Callable:
+        return copy.deepcopy(self._function_object)
+
+    @property
+    def call_count(self) -> int:
         return self._call_count
 
     @property
-    def n(self):
+    def n(self) -> int:
         return self.call_count
 
     def call(self, *args, **kwargs):
@@ -38,10 +42,10 @@ class Function:
 
         self._call_count = 0
 
-    def get_deepcopy(self):
+    def get_deepcopy(self) -> "Function":
         return copy.deepcopy(self)
 
-    def get_new(self):
+    def get_new(self) -> "Function":
         to_return = self.get_deepcopy()
         to_return.reset()
 
