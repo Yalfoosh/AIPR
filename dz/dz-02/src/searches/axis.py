@@ -89,7 +89,7 @@ def axis_search(
                 lambda x: function(current_point + x * movement_vector)
             )
 
-            current_point[i] += golden_section_search(
+            x_min = golden_section_search(
                 function=artificial_function,
                 start=0.0,
                 epsilon=epsilon[i],
@@ -97,6 +97,8 @@ def axis_search(
                 k_constant=k_constant,
                 decimal_precision=decimal_precision,
             )
+
+            current_point[i] += x_min * movement_vector[i]
 
         diff_smaller_than_epsilon = np.abs(current_point - last_point).less(epsilon)
         last_point = copy.deepcopy(current_point)
