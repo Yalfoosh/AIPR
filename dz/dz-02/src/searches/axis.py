@@ -74,7 +74,7 @@ def axis_search(
     last_point = copy.deepcopy(start)
     timed_out = True
 
-    for i in range(max_iterations):
+    for _ in range(max_iterations):
         current_point = copy.deepcopy(last_point)
 
         for i, x in enumerate(current_point):
