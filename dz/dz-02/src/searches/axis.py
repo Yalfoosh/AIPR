@@ -13,7 +13,7 @@ def clean_axis_search_arguments(
     start: np.ndarray,
     epsilon: Optional[np.ndarray],
     max_iterations: int,
-) -> Tuple[Function, np.ndarray, np.ndarray]:
+) -> Tuple[Function, np.ndarray, np.ndarray, int]:
     if not isinstance(function, Function):
         raise TypeError(
             "Expected argument function to be a Function, instead it is "
