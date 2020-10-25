@@ -74,12 +74,16 @@ def axis_search(
     last_point = copy.deepcopy(start)
     timed_out = True
 
+    base_movement_matrix = np.zeros((epsilon.shape[0], epsilon.shape[0]))
+
+    for i in range(epsilon.shape[0]):
+        base_movement_matrix[i][i] = epsilon[i]
+
     for _ in range(max_iterations):
         current_point = copy.deepcopy(last_point)
 
         for i, x in enumerate(current_point):
-            movement_vector = np.zeros(epsilon.shape)
-            movement_vector[i] = epsilon[i]
+            movement_vector = copy.deepcopy(base_movement_matrix[i])
 
             artificial_function = Function(
                 lambda x: function(current_point + x * movement_vector)
@@ -87,7 +91,7 @@ def axis_search(
 
             current_point[i] += golden_section_search(
                 function=artificial_function,
-                start=current_point[i],
+                start=0.0,
                 epsilon=epsilon[i],
                 verbosity=verbosity,
                 k_constant=k_constant,
