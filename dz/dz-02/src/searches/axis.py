@@ -58,16 +58,6 @@ def clean_axis_search_arguments(
     return function, start, epsilon, max_iterations
 
 
-def __get_artificial_1d_function(function: Function, point: np.ndarray, index: int):
-    def __artificial_function(x):
-        point = copy.deepcopy(point)
-        point[index] = x
-
-        return function(point)
-
-    return __artificial_function
-
-
 def axis_search(
     function: Function,
     start: np.ndarray,
@@ -88,11 +78,14 @@ def axis_search(
         current_point = copy.deepcopy(last_point)
 
         for i, x in enumerate(current_point):
-            artificial_function = __get_artificial_1d_function(
-                function=function, point=current_point, index=i
+            movement_vector = np.zeros(epsilon.shape)
+            movement_vector[i] = epsilon[i]
+
+            artificial_function = Function(
+                lambda x: function(current_point + x * movement_vector)
             )
 
-            current_point[i] = golden_section_search(
+            current_point[i] += golden_section_search(
                 function=artificial_function,
                 start=current_point[i],
                 epsilon=epsilon[i],
