@@ -45,6 +45,11 @@ def clean_golden_section_search_arguments(
             f"Expected argument verbosity to be a str, instead it is {type(verbosity)}."
         )
 
+    if verbosity not in constants.GOLDEN_SECTION_VERBOSITY_DICT:
+        raise KeyError(
+            f'Verbosity key "{verbosity}" not in Golden Section Verbosity dictionary.'
+        )
+
     verbosity = constants.GOLDEN_SECTION_VERBOSITY_DICT[verbosity]
 
     if not isinstance(k_constant, float):
@@ -111,12 +116,12 @@ def __print_gss_values(
     if verbosity == 0:
         return
     elif verbosity == 1:
-        value_string = ", ".join([f"{x:0{decimal_precision}f}" for x in (a, b, c, d)])
+        value_string = ", ".join([f"{x:.0{decimal_precision}f}" for x in (a, b, c, d)])
         print(f"(a, b, c, d) = {value_string}")
     elif verbosity > 1:
         value_string = "  ".join(
             [
-                f"f({x} = {y}) = {function(y, dont_count=True):0{decimal_precision}f}"
+                f"f({x} = {y}) = {function(y, dont_count=True):.0{decimal_precision}f}"
                 for x, y in zip(("a", "b", "c", "d"), (a, b, c, d))
             ]
         )

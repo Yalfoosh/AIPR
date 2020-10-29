@@ -43,7 +43,7 @@ def clean_axis_search_arguments(
             f"is {epsilon}."
         )
 
-    if not isinstance(max_iterations):
+    if not isinstance(max_iterations, int):
         raise TypeError(
             "Expected argument max_interations to be an int, instead it is "
             f"{type(max_iterations)}."

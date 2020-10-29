@@ -26,9 +26,16 @@ class Function:
         return self(*args, **kwargs)
 
     def __call__(self, *args, **kwargs):
+        dont_count = kwargs.get("dont_count", None)
+
+        if dont_count is None:
+            dont_count = False
+        else:
+            kwargs.pop("dont_count")
+
         call_result = self._function_object(*args, **kwargs)
 
-        if not kwargs.get("dont_count", False):
+        if not dont_count:
             self._call_count += 1
 
         return call_result
