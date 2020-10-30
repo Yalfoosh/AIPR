@@ -273,8 +273,10 @@ def nelder_mead_simplex_search(
         start=start, stride=stride, clean_arguments=False
     )
     simplex_values = np.array([function(x) for x in simplex_points])
+
     minimum_index = np.argmin(simplex_values)
     maximum_index = np.argmax(simplex_values)
+
     centroid = np.mean(np.delete(simplex_points, maximum_index, axis=0), axis=0)
 
     timed_out = True
@@ -313,7 +315,6 @@ def nelder_mead_simplex_search(
                     simplex_values[maximum_index] = function(
                         simplex_points[maximum_index]
                     )
-                    maximum_index = np.argmax(simplex_values)
 
                 contracted_point = __contract(
                     centroid=centroid,
@@ -325,7 +326,6 @@ def nelder_mead_simplex_search(
                 if contracted_value < simplex_values[maximum_index]:
                     simplex_points[maximum_index] = contracted_point
                     simplex_values[maximum_index] = contracted_value
-                    maximum_index = np.argmax(simplex_values)
                 else:
                     for i, simplex_point in enumerate(simplex_points):
                         if i == minimum_index:
@@ -335,14 +335,12 @@ def nelder_mead_simplex_search(
                             simplex_points[minimum_index] - simplex_points[i]
                         ) * sigma
                         simplex_values[i] = function(simplex_points[i])
-
-                    minimum_index = np.argmin(simplex_values)
-                    maximum_index = np.argmax(simplex_values)
             else:
                 simplex_points[maximum_index] = reflected_point
                 simplex_values[maximum_index] = function(simplex_points[maximum_index])
-                maximum_index = np.argmax(simplex_values)
 
+        minimum_index = np.argmin(simplex_values)
+        maximum_index = np.argmax(simplex_values)
         centroid = np.mean(np.delete(simplex_points, maximum_index, axis=0), axis=0)
 
         if __time_to_stop(
