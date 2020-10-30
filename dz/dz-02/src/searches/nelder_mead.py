@@ -307,7 +307,6 @@ def nelder_mead_simplex_search(
                 else reflected_point
             )
             simplex_values[maximum_index] = function(simplex_points[maximum_index])
-            maximum_index = np.argmax(simplex_values)
         else:
             if all(np.delete(simplex_values, maximum_index, axis=0) < reflected_value):
                 if reflected_value < simplex_values[maximum_index]:
