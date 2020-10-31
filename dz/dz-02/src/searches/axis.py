@@ -29,6 +29,29 @@ def clean_axis_search_arguments(
     epsilon: Optional[np.ndarray],
     max_iterations: int,
 ) -> Tuple[Function, np.ndarray, np.ndarray, int]:
+    """
+    Checks the Axis Search arguments and returns them prepared for work.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (np.ndarray): A numpy.ndarray representing the starting point of the
+        search.
+        epsilon (Optional[np.ndarray]): A numpy.ndarray representing the element-wise
+        error tolerance.
+        max_iterations (int): An int representing the maximum number of iterations
+        before the algorithm times out and returns the last found optimum.
+
+    Raises:
+        TypeError: Raised if argument function is not a Function.
+        TypeError: Raised if argument start is not a numpy.ndarray.
+        TypeError: Raised if argument epsilon is not a numpy.ndarray.
+        ValueError: Raised if argument epsilon contains at least one negative element.
+        TypeError: Raised if argument max_iterations is not an int.
+        ValueError: Raised if argument max_iterations is a negative number.
+
+    Returns:
+        Tuple[Function, np.ndarray, np.ndarray, int]: Cleaned arguments.
+    """
     if not isinstance(function, Function):
         raise TypeError(
             "Expected argument function to be a Function, instead it is "
@@ -65,7 +88,7 @@ def clean_axis_search_arguments(
         )
 
     if max_iterations < 1:
-        raise TypeError(
+        raise ValueError(
             "Expected argument max_interations to be a positive integer, instead it is "
             f"{max_iterations}."
         )
@@ -82,6 +105,29 @@ def axis_search(
     k_constant: float = constants.GOLDEN_SECTION_K_CONSTANT,
     decimal_precision: int = 3,
 ) -> np.ndarray:
+    """
+    Uses Axis Search to find a n-D optimum of a function with the Golden Section method
+    as a backbone.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (np.ndarray): A numpy.ndarray representing the starting point of the
+        search.
+        epsilon (Optional[np.ndarray], optional): A numpy.ndarray representing the
+        element-wise error tolerance. Defaults to None (1e-6 for all elements).
+        max_iterations (int, optional): An int representing the maximum number of
+        iterations before the algorithm times out and returns the last found optimum.
+        Defaults to 100000.
+        verbosity (Optional[str], optional): A str representing the verbosity of the
+        output during algorithm execution. Defaults to None (no output).
+        k_constant (float, optional): A float representing the constant for the Golden
+        Section search. Defaults to constants.GOLDEN_SECTION_K_CONSTANT.
+        decimal_precision (int, optional): An int representing the number of decimal
+        digits to round numbers outputted during algorithm execution. Defaults to 3.
+
+    Returns:
+        np.ndarray: A numpy.ndarray representing the last found optimum.
+    """
     function, start, epsilon, max_iterations = clean_axis_search_arguments(
         function=function, start=start, epsilon=epsilon, max_iterations=max_iterations
     )
@@ -89,6 +135,8 @@ def axis_search(
     last_point = copy.deepcopy(start)
     timed_out = True
 
+    # Base movement matrix is an eye matrix with an eigenvector of
+    # epsilon.
     base_movement_matrix = np.zeros((epsilon.shape[0], epsilon.shape[0]))
 
     for i in range(epsilon.shape[0]):
