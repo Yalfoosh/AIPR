@@ -106,7 +106,7 @@ def axis_search(
     decimal_precision: int = 3,
 ) -> np.ndarray:
     """
-    Uses Axis Search to find a n-D optimum of a function with the Golden Section method
+    Uses Axis Search to find an n-D optimum of a function with the Golden Section method
     as a backbone.
 
     Args:
