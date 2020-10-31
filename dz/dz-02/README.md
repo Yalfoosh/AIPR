@@ -14,4 +14,4 @@ Uđite u `demo` direktorij. Pokrenite `jupyter notebook`. Otvorite `demo-01_hw-0
 
 ## Razgledavanje
 
-U `docs/demo` direktoriju nalazi se izvršena bilježnica u LaTeX PDF formatu. U `src` direktoriju se nalazi cijela implementacija.
+U `docs/demo` direktoriju nalazi se izvršena bilježnica u HTML formatu. U `src` direktoriju se nalazi cijela implementacija.

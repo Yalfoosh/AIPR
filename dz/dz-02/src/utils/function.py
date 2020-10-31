@@ -13,3 +13,13 @@ def get_f3(starting_number: Union[float, int] = 1):
     return lambda x: np.sum(
         [np.square(x[i] - (starting_number + i)) for i in range(len(x))]
     )
+
+
+def get_f3_scalar(starting_number: Union[float, int] = 1):
+    if not isinstance(starting_number, (float, int)):
+        raise TypeError(
+            "Expected argument starting_number to be a float or int, instead it is "
+            f"{type(starting_number)}."
+        )
+
+    return lambda x: (x - starting_number) ** 2

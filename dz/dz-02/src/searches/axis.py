@@ -4,6 +4,7 @@ from typing import Optional, Tuple
 
 import numpy as np
 
+from . import constants
 from .function import Function
 from .golden_section import golden_section_search
 
@@ -64,7 +65,7 @@ def axis_search(
     epsilon: Optional[np.ndarray] = None,
     max_iterations: int = 100000,
     verbosity: Optional[str] = None,
-    k_constant: float = None,
+    k_constant: float = constants.GOLDEN_SECTION_K_CONSTANT,
     decimal_precision: int = 3,
 ) -> np.ndarray:
     function, start, epsilon, max_iterations = clean_axis_search_arguments(
@@ -100,7 +101,7 @@ def axis_search(
 
             current_point[i] += x_min * movement_vector[i]
 
-        diff_smaller_than_epsilon = np.abs(current_point - last_point).less(epsilon)
+        diff_smaller_than_epsilon = np.abs(current_point - last_point) < (epsilon)
         last_point = copy.deepcopy(current_point)
 
         if all(diff_smaller_than_epsilon):

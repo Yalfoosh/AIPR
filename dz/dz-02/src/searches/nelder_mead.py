@@ -107,9 +107,22 @@ def clean_nelder_mead_simplex_search_arguments(
         )
 
     if verbosity not in constants.NELDER_MEAD_SIMPLEX_VERBOSITY_DICT:
+        verbosity_dict_length = len(constants.NELDER_MEAD_SIMPLEX_VERBOSITY_DICT)
+
+        if verbosity_dict_length == 0:
+            verbosity_string = "There are no keys available."
+        elif verbosity_dict_length == 1:
+            _key = list(constants.NELDER_MEAD_SIMPLEX_VERBOSITY_DICT.keys())[0]
+            verbosity_string = f'The only available key is "{_key}".'
+        else:
+            _keys = list(sorted(constants.NELDER_MEAD_SIMPLEX_VERBOSITY_DICT.keys()))
+            verbosity_string = "The available keys are "
+            verbosity_string += ", ".join([str(f'"{x}"') for x in _keys[:-1]])
+            verbosity_string += f' and "{_keys[-1]}"".'
+
         raise KeyError(
-            f'Verbosity key "{verbosity}" not in Nelder Mead Simplex Verbosity '
-            "dictionary."
+            f'Verbosity key "{verbosity}" is not in the Nelder Mead Simplex Verbosity '
+            f"dictionary. {verbosity_string}"
         )
 
     verbosity = constants.NELDER_MEAD_SIMPLEX_VERBOSITY_DICT[verbosity]
@@ -210,8 +223,8 @@ def __time_to_stop(
 
 
 def __print_nmss_values(
-    centroid: np.ndarray,
     function: Function,
+    centroid: np.ndarray,
     verbosity: int,
     decimal_precision: int,
 ):
@@ -274,17 +287,16 @@ def nelder_mead_simplex_search(
     )
     simplex_values = np.array([function(x) for x in simplex_points])
 
-    minimum_index = np.argmin(simplex_values)
-    maximum_index = np.argmax(simplex_values)
-
-    centroid = np.mean(np.delete(simplex_points, maximum_index, axis=0), axis=0)
-
     timed_out = True
 
     for _ in range(max_iterations):
+        minimum_index = np.argmin(simplex_values)
+        maximum_index = np.argmax(simplex_values)
+        centroid = np.mean(np.delete(simplex_points, maximum_index, axis=0), axis=0)
+
         __print_nmss_values(
-            centroid=centroid,
             function=function,
+            centroid=centroid,
             verbosity=verbosity,
             decimal_precision=decimal_precision,
         )
@@ -308,12 +320,12 @@ def nelder_mead_simplex_search(
             )
             simplex_values[maximum_index] = function(simplex_points[maximum_index])
         else:
+            maximum_value = simplex_values[maximum_index]
+
             if all(np.delete(simplex_values, maximum_index, axis=0) < reflected_value):
-                if reflected_value < simplex_values[maximum_index]:
+                if reflected_value < maximum_value:
                     simplex_points[maximum_index] = reflected_point
-                    simplex_values[maximum_index] = function(
-                        simplex_points[maximum_index]
-                    )
+                    simplex_values[maximum_index] = reflected_value
 
                 contracted_point = __contract(
                     centroid=centroid,
@@ -322,7 +334,7 @@ def nelder_mead_simplex_search(
                 )
                 contracted_value = function(contracted_point)
 
-                if contracted_value < simplex_values[maximum_index]:
+                if contracted_value < maximum_value:
                     simplex_points[maximum_index] = contracted_point
                     simplex_values[maximum_index] = contracted_value
                 else:
@@ -336,11 +348,7 @@ def nelder_mead_simplex_search(
                         simplex_values[i] = function(simplex_points[i])
             else:
                 simplex_points[maximum_index] = reflected_point
-                simplex_values[maximum_index] = function(simplex_points[maximum_index])
-
-        minimum_index = np.argmin(simplex_values)
-        maximum_index = np.argmax(simplex_values)
-        centroid = np.mean(np.delete(simplex_points, maximum_index, axis=0), axis=0)
+                simplex_values[maximum_index] = reflected_value
 
         if __time_to_stop(
             simplex_values=simplex_values,
@@ -356,5 +364,8 @@ def nelder_mead_simplex_search(
             "iterations - result might not be a minimum.",
             file=sys.stderr,
         )
+
+    maximum_index = np.argmax(simplex_values)
+    centroid = np.mean(np.delete(simplex_points, maximum_index, axis=0), axis=0)
 
     return centroid

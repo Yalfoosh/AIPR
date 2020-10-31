@@ -46,8 +46,22 @@ def clean_golden_section_search_arguments(
         )
 
     if verbosity not in constants.GOLDEN_SECTION_VERBOSITY_DICT:
+        verbosity_dict_length = len(constants.GOLDEN_SECTION_VERBOSITY_DICT)
+
+        if verbosity_dict_length == 0:
+            verbosity_string = "There are no keys available."
+        elif verbosity_dict_length == 1:
+            _key = list(constants.GOLDEN_SECTION_VERBOSITY_DICT.keys())[0]
+            verbosity_string = f'The only available key is "{_key}".'
+        else:
+            _keys = list(sorted(constants.GOLDEN_SECTION_VERBOSITY_DICT.keys()))
+            verbosity_string = "The available keys are "
+            verbosity_string += ", ".join([str(f'"{x}"') for x in _keys[:-1]])
+            verbosity_string += f' and "{_keys[-1]}"".'
+
         raise KeyError(
-            f'Verbosity key "{verbosity}" not in Golden Section Verbosity dictionary.'
+            f'Verbosity key "{verbosity}" is not in the Golden Section Verbosity '
+            f"dictionary. {verbosity_string}"
         )
 
     verbosity = constants.GOLDEN_SECTION_VERBOSITY_DICT[verbosity]
@@ -105,11 +119,11 @@ def clean_find_unimodality_interval_arguments(
 
 
 def __print_gss_values(
+    function: Function,
     a: float,
     b: float,
     c: float,
     d: float,
-    function: Function,
     verbosity: int,
     decimal_precision: int,
 ):
@@ -163,7 +177,7 @@ def golden_section_search(
     end: Optional[Union[float, int]] = None,
     epsilon: float = 1e-6,
     verbosity: Optional[str] = None,
-    k_constant: float = None,
+    k_constant: float = constants.GOLDEN_SECTION_K_CONSTANT,
     decimal_precision: int = 3,
 ) -> float:
     (
@@ -191,11 +205,11 @@ def golden_section_search(
     f_c, f_d = function(c), function(d)
 
     __print_gss_values(
+        function=function,
         a=a,
         b=b,
         c=c,
         d=d,
-        function=function,
         verbosity=verbosity,
         decimal_precision=decimal_precision,
     )
