@@ -19,17 +19,15 @@ import numpy as np
 
 def get_f3(starting_number: Union[float, int] = 1) -> Callable:
     """
-    Returns function 3 for a given starting number (the first
-    element of the function optimum).
+    Returns function 3 for a given starting number (the first element of the function
+    optimum).
 
     Args:
-        starting_number (Union[float, int], optional): An int
-        representing the first element of the function optimum.
-        Defaults to 1.
+        starting_number (Union[float, int], optional): An int representing the first
+        element of the function optimum. Defaults to 1.
 
     Raises:
-        TypeError: Raised if argument starting_number is not a
-        float or int.
+        TypeError: Raised if argument starting_number is not a float or int.
 
     Returns:
         Callable: A callable object representing function 3.
@@ -43,3 +41,27 @@ def get_f3(starting_number: Union[float, int] = 1) -> Callable:
     return lambda x: np.sum(
         [np.square(x[i] - (starting_number + i)) for i in range(len(x))]
     )
+
+
+def get_f3_scalar(starting_number: Union[float, int] = 1) -> Callable:
+    """
+    Returns a scalar function 3 for a given starting number (the first element of the
+    function optimum).
+
+    Args:
+        starting_number (Union[float, int], optional): An int representing the first
+        element of the function optimum. Defaults to 1.
+
+    Raises:
+        TypeError: Raised if argument starting_number is not a float or int.
+
+    Returns:
+        Callable: A callable object representing a scalar function 3.
+    """
+    if not isinstance(starting_number, (float, int)):
+        raise TypeError(
+            "Expected argument starting_number to be a float or int, instead it is "
+            f"{type(starting_number)}."
+        )
+
+    return lambda x: (x - starting_number) ** 2

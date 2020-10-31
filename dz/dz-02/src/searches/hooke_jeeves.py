@@ -257,7 +257,7 @@ def __time_to_stop(stride: np.ndarray, min_stride: np.ndarray) -> bool:
         movement vector. In practice equal to half the epsilon.
 
     Returns:
-        bool: True if the stopping condition of Hooke-Jeeves search has been met, False
+        bool: True if the stopping condition of Hooke-Jeeves Search has been met, False
         otherwise.
     """
     # Although not specified, I presume all is the correct
@@ -275,7 +275,7 @@ def __print_hjs_values(
     decimal_precision: int,
 ):
     """
-    Prints the Hooke Jeeves Search values.
+    Prints the Hooke-Jeeves Search values.
 
     Args:
         function (Function): A Function representing the loss function.
@@ -290,7 +290,7 @@ def __print_hjs_values(
         decimal_precision (int): An int representing the number of decimal digits to
         round numbers outputted during algorithm execution.
     """
-    if verbosity == 0:
+    if verbosity < 1:
         return
 
     points = (base_point, search_start_point, current_point)
@@ -330,7 +330,7 @@ def hooke_jeeves_search(
     decimal_precision: int = 3,
 ) -> np.ndarray:
     """
-    Uses Golden Section Search to find an n-D optimum of a function.
+    Uses Hooke-Jeeves Search to find an n-D optimum of a function.
 
     Args:
         function (Function): A Function representing the loss function.
@@ -349,7 +349,7 @@ def hooke_jeeves_search(
         digits to round numbers outputted during algorithm execution. Defaults to 3.
 
     Returns:
-        np.ndarray: [description]
+        np.ndarray: A numpy.ndarray representing the last found optimum.
     """
     (
         function,
@@ -369,13 +369,13 @@ def hooke_jeeves_search(
         decimal_precision=decimal_precision,
     )
 
-    # Copy it since we're changing it
+    # Copy it since we'll change it during execution.
     stride = copy.deepcopy(stride)
 
-    # Don't calculate them every time
+    # Don't calculate them every time.
     min_stride = epsilon / 2
 
-    # Copy them to avoid editing the original value
+    # Copy them since we'll change them during execution.
     base_point = copy.deepcopy(start)
     search_start_point = copy.deepcopy(start)
 
@@ -393,7 +393,7 @@ def hooke_jeeves_search(
             decimal_precision=decimal_precision,
         )
 
-        # No need to cache this since we're not using it any more.
+        # No need to cache this since we're not using the values after.
         if function(current_point) < function(base_point):
             search_start_point = current_point * 2 - base_point
             base_point = copy.deepcopy(current_point)

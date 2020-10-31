@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import sys
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import numpy as np
 
@@ -23,8 +23,6 @@ from .function import Function
 
 def clean_nelder_mead_simplex_search_arguments(
     function: Function,
-    start: np.ndarray,
-    stride: float,
     alpha: float,
     beta: float,
     gamma: float,
@@ -33,27 +31,47 @@ def clean_nelder_mead_simplex_search_arguments(
     max_iterations: int,
     verbosity: Optional[str],
     decimal_precision: int,
-) -> Tuple[Function, np.ndarray, float, int, float, float, float, float, int, int, int]:
+) -> Tuple[Function, int, float, float, float, float, int, int, int]:
+    """
+    Checks the Nelder Mead Simplex Search arguments and returns them prepared for work.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        alpha (float): A float used in point reflection.
+        beta (float): A float used in point contraction.
+        gamma (float): A float used in point expansion.
+        sigma (float): A float used when moving points to the optimum.
+        epsilon (float): A float representing the error threshold.
+        max_iterations (int): An int representing the maximum number of iterations
+        before the algorithm times out and returns the last found optimum.
+        verbosity (Optional[str]): A str representing the verbosity of the output during
+        algorithm execution.
+        decimal_precision (int): An int representing the number of decimal digits to
+        round numbers outputted during algorithm execution.
+
+    Raises:
+        TypeError: Raised if argument function is not a Function.
+        TypeError: Raised if argument alpha is not a float.
+        TypeError: Raised if argument beta is not a float.
+        TypeError: Raised if argument gamma is not a float.
+        TypeError: Raised if argument sigma is not a float.
+        TypeError: Raised if argument epsilon is not a float.
+        ValueError: Raised if argument alpha is a negative number.
+        TypeError: Raised if argument max_iterations is not an int.
+        ValueError: Raised if argument max_iterations is a negative number.
+        TypeError: Raised if argument verbosity is not a str.
+        KeyError: Raised if argument verbosity is an invalid key.
+        TypeError: Raised if argument decimal_precision is not an int.
+        ValueError: Raised if argument decimal_precision is a negative number.
+
+    Returns:
+        Tuple[Function, int, float, float, float, float, int, int, int]: Cleaned
+        arguments.
+    """
     if not isinstance(function, Function):
         raise TypeError(
             "Expected argument function to be a Function, instead it is "
             f"{type(function)}."
-        )
-
-    if not isinstance(start, np.ndarray):
-        raise TypeError(
-            "Expected argument start to be a numpy.ndarray, instead it is "
-            f"{type(start)}."
-        )
-
-    start = np.reshape(start, -1)
-
-    if isinstance(stride, int):
-        stride = float(stride)
-
-    if not isinstance(stride, float):
-        raise TypeError(
-            "Expected argument stride to be a float, instead it is " f"{type(stride)}."
         )
 
     if isinstance(alpha, int):
@@ -107,7 +125,7 @@ def clean_nelder_mead_simplex_search_arguments(
         )
 
     if max_iterations < 1:
-        raise TypeError(
+        raise ValueError(
             "Expected argument max_interations to be a positive integer, instead it is "
             f"{max_iterations}."
         )
@@ -155,8 +173,6 @@ def clean_nelder_mead_simplex_search_arguments(
 
     return (
         function,
-        start,
-        stride,
         alpha,
         beta,
         gamma,
@@ -169,8 +185,24 @@ def clean_nelder_mead_simplex_search_arguments(
 
 
 def clean_get_simplex_points(
-    start: np.ndarray, stride: float
+    start: np.ndarray, stride: Union[float, int]
 ) -> Tuple[np.ndarray, float]:
+    """
+    Checks the __get_simplex_points arguments and returns them prepared for work.
+
+    Args:
+        start (np.ndarray): A numpy.ndarray representing the starting point for simplex
+        generation.
+        stride (Union[float, int]): A float or int representing the stride.
+
+    Raises:
+        TypeError: Raised if argument start is not a numpy.ndarray.
+        ValueError: Raised if argument start is a zero-length vector.
+        TypeError: Raised if argument stride is not a float or int.
+
+    Returns:
+        Tuple[np.ndarray, float]: Cleaned arguments.
+    """
     if not isinstance(start, np.ndarray):
         raise TypeError(
             "Expected argument start to be a numpy.ndarray, instead it is "
@@ -179,28 +211,35 @@ def clean_get_simplex_points(
 
     start = np.reshape(start, -1)
 
-    if isinstance(stride, int):
-        stride = float(stride)
-
-    if not isinstance(stride, float):
-        raise TypeError(
-            "Expected argument stride to be a float, instead it is " f"{type(stride)}."
-        )
-
-    return start, stride
-
-
-def __get_simplex_points(
-    start: np.ndarray, stride: float, clean_arguments: bool = True
-) -> np.ndarray:
-    if clean_arguments:
-        start, stride = clean_get_simplex_points(start=start, stride=stride)
-
     if start.shape[0] == 0:
         raise ValueError(
             "Expected argument starting point to be a vector with at least one "
             "element, instead it is empty."
         )
+
+    if not isinstance(stride, (float, int)):
+        raise TypeError(
+            "Expected argument stride to be a float or int, instead it is "
+            f"{type(stride)}."
+        )
+
+    stride = float(stride)
+
+    return start, stride
+
+
+def __get_simplex_points(start: np.ndarray, stride: float) -> np.ndarray:
+    """
+    Generates simplex points for a starting point.
+
+    Args:
+        start (np.ndarray): A numpy.ndarray representing the starting point for simplex
+        generation.
+        stride (float): A float representing the stride.
+
+    Returns:
+        np.ndarray: A matrix with each row representing a point of the simplex.
+    """
 
     points = np.tile(start, reps=(start.shape[0], 1))
     points = points + stride * np.eye(points.shape[0])
@@ -211,24 +250,73 @@ def __get_simplex_points(
 def __reflect(
     centroid: np.ndarray, maximum_point: np.ndarray, alpha: float
 ) -> np.ndarray:
+    """
+    Reflects argument maximum_points wrt centroid by argument alpha.
+
+    Args:
+        centroid (np.ndarray): A numpy.ndarray representing the simplex centroid.
+        maximum_point (np.ndarray): A numpy.ndarray representing the worst point of a
+        simplex.
+        alpha (float): A float representing the amount a point will be reflected.
+
+    Returns:
+        np.ndarray: A numpy.ndarray representing the reflected point.
+    """
     return (1 + alpha) * centroid - alpha * maximum_point
 
 
 def __contract(
     centroid: np.ndarray, maximum_point: np.ndarray, beta: float
 ) -> np.ndarray:
+    """
+    Contracts argument maximum_points wrt centroid by argument beta.
+
+    Args:
+        centroid (np.ndarray): A numpy.ndarray representing the simplex centroid.
+        maximum_point (np.ndarray): A numpy.ndarray representing the worst point of a
+        simplex.
+        beta (float): A float representing the amount a point will be contracted.
+
+    Returns:
+        np.ndarray: A numpy.ndarray representing the contracted point.
+    """
     return (1 - beta) * centroid + beta * maximum_point
 
 
 def __expand(
     centroid: np.ndarray, reflected_point: np.ndarray, gamma: float
 ) -> np.ndarray:
+    """
+    Expands argument reflected_point wrt centroid by argument alpha.
+
+    Args:
+        centroid (np.ndarray): A numpy.ndarray representing the simplex centroid.
+        maximum_point (np.ndarray): A numpy.ndarray representing the worst point of a
+        simplex.
+        gamma (float): A float representing the amount a point will be expanded.
+
+    Returns:
+        np.ndarray: A numpy.ndarray representing the expanded point.
+    """
     return (1 - gamma) * centroid + gamma * reflected_point
 
 
 def __time_to_stop(
     simplex_values: np.ndarray, centroid_value: float, epsilon: float
 ) -> bool:
+    """
+    Checks if it's time to stop Nelder Mead Simplex Search.
+
+    Args:
+        simplex_values (np.ndarray): A numpy.ndarray representing the vector of simplex
+        values.
+        centroid_value (float): A float representing the value of the simplex centroid.
+        epsilon (float): A float representing the error threshold.
+
+    Returns:
+        bool: True if the stopping condition of Nelder Mead Simplex Search has been met,
+        False otherwise.
+    """
     difference_in_values = simplex_values - centroid_value
     squared_difference_in_values = np.square(difference_in_values)
     mean_squared_difference_in_values = np.mean(squared_difference_in_values)
@@ -242,17 +330,26 @@ def __print_nmss_values(
     verbosity: int,
     decimal_precision: int,
 ):
-    if verbosity == 0:
-        return
-    elif verbosity == 1:
+    """
+    Prints the Nelder Mead Simplex Search values.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        centroid (np.ndarray): A numpy.ndarray representing the simplex centroid.
+        verbosity (int): An int representing the level of verbosity of the output during
+        algorithm execution.
+        decimal_precision (int): An int representing the number of decimal digits to
+        round numbers outputted during algorithm execution.
+    """
+    if verbosity == 1:
         print(f"c = {np.around(centroid, decimal_precision)}")
     elif verbosity > 1:
         result = function(centroid, dont_count=True)
-
-        if isinstance(result, np.ndarray):
-            result = np.around(result, 3)
-        else:
-            result = f"{result:.0{decimal_precision}f}"
+        result = (
+            np.around(result, 3)
+            if isinstance(result, np.ndarray)
+            else f"{result:.0{decimal_precision}f}"
+        )
 
         print(f"F(c = {np.around(centroid, decimal_precision)}) = {result}")
 
@@ -260,7 +357,7 @@ def __print_nmss_values(
 def nelder_mead_simplex_search(
     function: Function,
     start: np.ndarray,
-    stride: int = 1,
+    stride: Union[float, int] = 1,
     alpha: float = 1.0,
     beta: float = 0.5,
     gamma: float = 2.0,
@@ -269,11 +366,37 @@ def nelder_mead_simplex_search(
     max_iterations: int = 100000,
     verbosity: Optional[str] = None,
     decimal_precision: int = 3,
-):
+) -> np.ndarray:
+    """
+    Uses Nelder Mead Simplex Search to find an n-D optimum of a function.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (np.ndarray): A numpy.ndarray representing the starting point of the
+        search.
+        stride (Union[float, int], optional): A float or int representing the stride for
+        simplex generation. Defaults to 1.
+        alpha (float, optional): A float used in point reflection. Defaults to 1.0.
+        beta (float, optional): A float used in point contraction. Defaults to 0.5.
+        gamma (float, optional): A float used in point expansion. Defaults to 2.0.
+        sigma (float, optional): A float used when moving points to the optimum.
+        Defaults to 0.5.
+        epsilon (float, optional): A float representing the error threshold. Defaults to
+        1e-6.
+        max_iterations (int, optional): An int representing the maximum number of
+        iterations before the algorithm times out and returns the last found optimum.
+        Defaults to 100000.
+        verbosity (Optional[str], optional): A str representing the verbosity of the
+        output during algorithm execution. Defaults to None (no output during algorithm
+        execution).
+        decimal_precision (int, optional): An int representing the number of decimal
+        digits to round numbers outputted during algorithm execution. Defaults to 3.
+
+    Returns:
+        np.ndarray: A numpy.ndarray representing the last found optimum.
+    """
     (
         function,
-        start,
-        stride,
         alpha,
         beta,
         gamma,
@@ -284,8 +407,6 @@ def nelder_mead_simplex_search(
         decimal_precision,
     ) = clean_nelder_mead_simplex_search_arguments(
         function=function,
-        start=start,
-        stride=stride,
         alpha=alpha,
         beta=beta,
         gamma=gamma,
@@ -295,10 +416,9 @@ def nelder_mead_simplex_search(
         verbosity=verbosity,
         decimal_precision=decimal_precision,
     )
+    start, stride = clean_get_simplex_points(start=start, stride=stride)
 
-    simplex_points = __get_simplex_points(
-        start=start, stride=stride, clean_arguments=False
-    )
+    simplex_points = __get_simplex_points(start=start, stride=stride)
     simplex_values = np.array([function(x) for x in simplex_points])
 
     timed_out = True
@@ -326,13 +446,14 @@ def nelder_mead_simplex_search(
             expanded_point = __expand(
                 centroid=centroid, reflected_point=reflected_point, gamma=gamma
             )
+            expanded_value = function(expanded_point)
 
-            simplex_points[maximum_index] = (
-                expanded_point
-                if function(expanded_point) < minimum_value
-                else reflected_point
-            )
-            simplex_values[maximum_index] = function(simplex_points[maximum_index])
+            if expanded_value < minimum_value:
+                simplex_points[maximum_index] = expanded_point
+                simplex_values[maximum_index] = expanded_value
+            else:
+                simplex_points[maximum_index] = reflected_point
+                simplex_values[maximum_index] = reflected_value
         else:
             maximum_value = simplex_values[maximum_index]
 
@@ -340,6 +461,13 @@ def nelder_mead_simplex_search(
                 if reflected_value < maximum_value:
                     simplex_points[maximum_index] = reflected_point
                     simplex_values[maximum_index] = reflected_value
+
+                    # We need this here since we're introducing a new point and value
+                    minimum_index = np.argmin(simplex_values)
+                    maximum_index = np.argmax(simplex_values)
+
+                    # We need to do this since the maximum value has potentially changed
+                    maximum_value = simplex_values[maximum_index]
 
                 contracted_point = __contract(
                     centroid=centroid,
@@ -379,6 +507,7 @@ def nelder_mead_simplex_search(
             file=sys.stderr,
         )
 
+    # Do this to get a more precise result
     maximum_index = np.argmax(simplex_values)
     centroid = np.mean(np.delete(simplex_points, maximum_index, axis=0), axis=0)
 

@@ -213,9 +213,7 @@ def __print_gss_values(
         decimal_precision (int): An int representing the number of decimal digits to
         round numbers outputted during algorithm execution.
     """
-    if verbosity == 0:
-        return
-    elif verbosity == 1:
+    if verbosity == 1:
         value_string = ", ".join([f"{x:.0{decimal_precision}f}" for x in (a, b, c, d)])
         print(f"(a, b, c, d) = {value_string}")
     elif verbosity > 1:
