@@ -27,6 +27,37 @@ def clean_golden_section_search_arguments(
     k_constant: float,
     decimal_precision: int,
 ) -> Tuple[Function, Tuple[float, float], float, int, float, int]:
+    """
+    Checks the Golden Section Search arguments and returns them prepared for work.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (Union[float, int]): AA float or int representing the starting point of
+        the search.
+        end (Optional[Union[float, int]]): A float or int representing the ending point
+        of the search.
+        epsilon (float): A float representing the error threshold.
+        verbosity (Optional[str]): A str representing the verbosity of the output during
+        algorithm execution.
+        k_constant (float): A float representing the constant for the Golden Section
+        Search.
+        decimal_precision (int): An int representing the number of decimal digits to
+        round numbers outputted during algorithm execution.
+
+    Raises:
+        TypeError: Raised if argument function is not a Function.
+        ValueError: Raised if argument start is None.
+        TypeError: Raised if argument epsilon is not a float.
+        ValueError: Raised if argument epsilon is a negative number.
+        TypeError: Raised if argument verbosity is not a string.
+        KeyError: Raised if argument verbosity is an invalid key.
+        TypeError: Raised if argument k_constant is not a float.
+        TypeError: Raised if argument decimal_precision is not an int.
+        ValueError: Raised if argument decimal_precision is negative.
+
+    Returns:
+        Tuple[Function, Tuple[float, float], float, int, float, int]: Cleaned arguments.
+    """
     if not isinstance(function, Function):
         raise TypeError(
             "Expected argument function to be a Function, instead it is "
@@ -106,6 +137,23 @@ def clean_find_unimodality_interval_arguments(
     start: float,
     stride: int,
 ) -> Tuple[Function, float, int]:
+    """
+    Checks the Find unimodality interval arguments and returns them prepared for work.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (float): A float representing the starting point of the search.
+        stride (int): An int representing the stride of the alrgorithm.
+
+    Raises:
+        TypeError: Raised if argument function is not a Function.
+        TypeError: Raised if argument start is not a float.
+        TypeError: Raised if argument stride is not an int.
+        ValueError: Raised if argument string is a negative number.
+
+    Returns:
+        Tuple[Function, float, int]: Cleaned arguments.
+    """
     if not isinstance(function, Function):
         raise TypeError(
             "Expected argument function to be a Function, instead it is "
@@ -141,15 +189,32 @@ def __print_gss_values(
     verbosity: int,
     decimal_precision: int,
 ):
+    """
+    Prints the Golden Section Search values.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        a (float): A float representing the a variable of Golden Section Search.
+        b (float): A float representing the b variable of Golden Section Search.
+        c (float): A float representing the c variable of Golden Section Search.
+        d (float): A float representing the d variable of Golden Section Search.
+        verbosity (int): An int representing the level of verbosity of the output during
+        algorithm execution.
+        decimal_precision (int): An int representing the number of decimal digits to
+        round numbers outputted during algorithm execution.
+    """
     if verbosity == 0:
         return
     elif verbosity == 1:
         value_string = ", ".join([f"{x:.0{decimal_precision}f}" for x in (a, b, c, d)])
         print(f"(a, b, c, d) = {value_string}")
     elif verbosity > 1:
+        # We don't count function calls only for c and d, as f(a)
+        # and f(b) are never calculated.
         value_string = "  ".join(
             [
-                f"f({x} = {y}) = {function(y, dont_count=True):.0{decimal_precision}f}"
+                f"f({x} = {y}) = "
+                f"{function(y, dont_count=(x in ('c', 'd'))):.0{decimal_precision}f}"
                 for x, y in zip(("a", "b", "c", "d"), (a, b, c, d))
             ]
         )
@@ -160,27 +225,40 @@ def find_unimodality_interval(
     start: float,
     stride: int = 1,
 ) -> Tuple[float, float]:
+    """
+    Finds the nearest unimodality interval starting from some point.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (float): A float representing the starting point of the search.
+        stride (int, optional): An int representing the stride of the alrgorithm.
+        Defaults to 1.
+
+    Returns:
+        Tuple[float, float]: A pair of floats representing the bounds of the unimodality
+        interval.
+    """
 
     function, start, stride = clean_find_unimodality_interval_arguments(
         function=function, start=start, stride=stride
     )
 
     left, mid, right = start - stride, start, start + stride
-    f_left, f_mid, f_right = (function(x) for x in (left, mid, right))
+    left_value, mid_value, right_value = (function(x) for x in (left, mid, right))
 
     step = 1
 
-    if not f_left > f_mid < f_right:
-        if f_mid > f_right:
-            while f_mid > f_right:
+    if not left_value > mid_value < right_value:
+        if mid_value > right_value:
+            while mid_value > right_value:
                 step *= 2
                 left, mid, right = mid, right, start + stride * step
-                f_mid, f_right = f_right, function(right)
+                mid_value, right_value = right_value, function(right)
         else:
-            while f_mid > f_left:
+            while mid_value > left_value:
                 step *= 2
                 left, mid, right = start - stride * step, left, mid
-                f_left, f_mid = function(left), f_left
+                left_value, mid_value = function(left), left_value
 
     return left, right
 
@@ -194,6 +272,29 @@ def golden_section_search(
     k_constant: float = constants.GOLDEN_SECTION_K_CONSTANT,
     decimal_precision: int = 3,
 ) -> float:
+    """
+    Uses Golden Section Search to find an 1D optimum of a function.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (Union[float, int]): A float or int representing the starting point of the
+        search.
+        end (Optional[Union[float, int]], optional): A float or int representing the
+        right bound of the starting interval. Defaults to None (finds the unimodality
+        interval based on argument start).
+        epsilon (float, optional): A float representing the error threshold. Defaults to
+        1e-6.
+        verbosity (Optional[str], optional): A str representing the verbosity of the
+        output during algorithm execution. Defaults to None (no output during algorithm
+        execution).
+        k_constant (float, optional): A float representing the constant for the Golden
+        Section Search. Defaults to constants.GOLDEN_SECTION_K_CONSTANT.
+        decimal_precision (int, optional): An int representing the number of decimal
+        digits to round numbers outputted during algorithm execution. Defaults to 3.
+
+    Returns:
+        float: A float representing the last found optimum.
+    """
     (
         function,
         interval,
@@ -216,30 +317,9 @@ def golden_section_search(
 
     a, b = interval
     c, d = b - k_constant * (b - a), a + k_constant * (b - a)
-    f_c, f_d = function(c), function(d)
-
-    __print_gss_values(
-        function=function,
-        a=a,
-        b=b,
-        c=c,
-        d=d,
-        verbosity=verbosity,
-        decimal_precision=decimal_precision,
-    )
+    c_value, d_value = function(c), function(d)
 
     while (b - a) > epsilon:
-        if f_c < f_d:
-            b, d = d, c
-            c = b - k_constant * (b - a)
-
-            f_c, f_d = function(c), f_c
-        else:
-            a, c = c, d
-            d = a + k_constant * (b - a)
-
-            f_c, f_d = f_d, function(d)
-
         __print_gss_values(
             a=a,
             b=b,
@@ -249,5 +329,16 @@ def golden_section_search(
             verbosity=verbosity,
             decimal_precision=decimal_precision,
         )
+
+        if c_value < d_value:
+            b, d = d, c
+            c = b - k_constant * (b - a)
+
+            c_value, d_value = function(c), c_value
+        else:
+            a, c = c, d
+            d = a + k_constant * (b - a)
+
+            c_value, d_value = d_value, function(d)
 
     return (a + b) / 2
