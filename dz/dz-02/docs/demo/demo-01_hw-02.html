@@ -16124,7 +16124,7 @@ $$
 <ul>
 <li><strong>Pretraživanje po koordinatnim osima</strong>: $\begin{bmatrix}0.0002 &amp; 0.000399\end{bmatrix}$</li>
 <li><strong>Nelder Mead simplex</strong>: $\begin{bmatrix}0.00015 &amp; 0.00028\end{bmatrix}$</li>
-<li><strong>Hooke-Jeeves postupak</strong>: $\begin{bmatrix}0.00001 &amp; 0.00001\end{bmatrix}$</li>
+<li><strong>Hooke-Jeeves postupak</strong>: $\begin{bmatrix}0 &amp; 0.0000001 \end{bmatrix}$</li>
 </ul>
 <p>Vidimo da najmanju razliku ima <strong>Hooke-Jeeves postupak</strong>, pa <strong>Nelder Mead simpleks</strong>, pa <strong>pretraživanje po koordinatnim osima</strong>. <strong>Hooke-Jeeves postupak</strong>, međutim, više puta poziva funkciju od <strong>Nelder Mead simpleksa</strong>, tako da nije striktno bolji. <strong>Pretraživanje po koordinatnim osima</strong> uz najgore rezultate ima i najgore performanse - zahtjevajući 3 reda veličina više poziva od <strong>Nelder Mead simpleksa</strong>.</p>
 
@@ -16138,7 +16138,7 @@ $$
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>I ovdje su sve funkcije uspjele naći minimum, samo je <strong>Nelder Mead simpleks</strong> bio manje precizan od ostalih. Međutim, bitno je za napomenuti da je on našao rješenje u najmanje koraka (opet), te da bi nam ono možda bilo prihvatljivi trade-off za performanse.</p>
+<p>I ovdje su sve funkcije uspjele pronaći minimum, samo je <strong>Nelder Mead simpleks</strong> bio manje precizan od ostalih. Međutim, bitno je za napomenuti da je on našao rješenje u najmanje koraka (opet), te da bi nam ono možda bilo prihvatljivi trade-off za performanse.</p>
 
 </div>
 </div>
@@ -16252,16 +16252,16 @@ $$
 $$
 \begin{equation}
     \begin{array}
-        &amp; i, j, k \in {\mathbb{N}}_0 &amp; i, k \in \left[ 1, j \right] &amp;
+        &amp; i, j, k \in \mathbb{N} &amp; i, k \in \left[ 1, j \right] &amp;
     \end{array} \\
 %
-\vec{e}_i : {\mathbb{R}}^j =
+\vec{\epsilon}_i : {\mathbb{R}}^j =
 \begin{cases}
     0 &amp; k \neq i \\
-    e_k &amp; k = i
+    \epsilon_k &amp; k = i
 \end{cases} \\
 %
-f_i \left( \lambda, \alpha \right) = f \left( \vec{x} + \alpha \lambda \cdot \vec{e}_{i} \right) \\
+f_i \left( \lambda, \alpha \right) = f \left( \vec{x} + \alpha \lambda \cdot \vec{\epsilon}_{i} \right) \\
 \end{equation}
 $$
 </div>
@@ -16452,7 +16452,7 @@ $$
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>Odgovor</strong>: U pitanju je bila funkcija 4, tj. Jakobovićeva funkcija. Nelder Mead simpleks je dobro aproksimirao minimum, skoro ga doveo do nul-vektora. Međutim, izgleda da je Hooke-Jeeves postupak bio neefektivan. Razlog za to je jednostavan, no olakšajmo si prvo tako da nacrtamo kako konkretna funkcija izgleda.</p>
+<p><strong>Odgovor</strong>: U pitanju je bila funkcija 4, tj. Jakobovićeva funkcija. <strong>Nelder Mead simpleks</strong> je dobro aproksimirao minimum, skoro ga doveo do nul-vektora. Međutim, izgleda da je <strong>Hooke-Jeeves postupak</strong> bio neefektivan. Razlog za to je jednostavan, no olakšajmo si prvo razmatranje tako da nacrtamo kako funkcija 4 izgleda.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -16517,7 +16517,7 @@ $$
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Sada prikažimo gdje se nalazi naša početna točka, i sve točke s kojima će Hooke-Jeeves inicijalno pokušati naći minimum.</p>
+<p>Sada prikažimo gdje se nalazi naša početna točka, i sve točke s kojima će <strong>Hooke-Jeeves postupak</strong> inicijalno pokušati pronaći minimum.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -16604,7 +16604,7 @@ $$
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Vidimo da prva pretraga ne može naći bolju točku. Pretrage gdje je smanjen pomak služe samo kako bi se našlo "finije" rješenje, tj. kako bi trenutna točka potonula u rupicu koja bi trebala biti minimum. Sljedećim pretragama ovi će se bijeli markeri samo približavati zelenom markeru, tj. početnoj točki. To neće pomoći pronalaženju optimuma jer dana funkcija nema oblik bazenčića. Način kako bi se mogli izbaviti iz minimuma je smanjenjem epsilona - na taj način ćemo dopustiti ovim "sonda" točkama da dođu dovoljno blizu da nađu minimum. Međutim, ovakva konvergencija će biti iznimno spora jer ne postoji mehanizam vraćanja pomaka na inicijalnu vrijednost, čime bi se ubrzala pretraga jednom kad natjeramo točku u bazen blizu ishodišta.</p>
+<p>Vidimo da prva pretraga ne može pronaći bolju točku. Pretrage gdje je smanjen pomak služe samo kako bi se našlo "finije" rješenje, tj. kako bi trenutna točka potonula u rupicu koja bi trebala biti minimum. Sljedećim pretragama ovi će se bijeli markeri samo približavati zelenom markeru, tj. početnoj točki. To neće pomoći pronalaženju optimuma jer dana funkcija nema oblik bazenčića. Način kako bi se mogli izbaviti iz minimuma je smanjenjem epsilona - na taj način ćemo dopustiti ovim "sonda" točkama da dođu dovoljno blizu da nađu minimum. Međutim, ovakva konvergencija će biti iznimno spora jer ne postoji mehanizam vraćanja pomaka na inicijalnu vrijednost, čime bi se ubrzala pretraga jednom kad natjeramo točku u bazen blizu ishodišta.</p>
 <p>Bolja metoda bi bila sljedeća</p>
 <ul>
 <li>smanjiti koeficijent s kojim se dijeli epsilon</li>
@@ -16711,7 +16711,7 @@ $$
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 111.03it/s]
+<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 106.81it/s]
 </pre>
 </div>
 </div>
@@ -16895,7 +16895,7 @@ $$
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 46.15it/s]
+<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 48.03it/s]
 </pre>
 </div>
 </div>
@@ -17088,7 +17088,7 @@ $$
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Računam Nelder Mead simplekse: 100%|██████████| 10000/10000 [00:30&lt;00:00, 325.29it/s]
+<pre>Računam Nelder Mead simplekse: 100%|██████████| 10000/10000 [00:31&lt;00:00, 314.80it/s]
 </pre>
 </div>
 </div>
@@ -17168,7 +17168,7 @@ $$
 
 
 <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output " data-mime-type="text/markdown">
-<p>U $10000$ ponavljanja globalni optimum je pronađen $67$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno 0.67%.</p>
+<p>U $10000$ ponavljanja globalni optimum je pronađen $64$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno 0.64%.</p>
 
 </div>
 
