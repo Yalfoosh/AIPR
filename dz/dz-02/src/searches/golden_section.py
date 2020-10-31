@@ -22,11 +22,11 @@ def clean_golden_section_search_arguments(
     function: Function,
     start: Union[float, int],
     end: Optional[Union[float, int]],
+    k_constant: float,
     epsilon: float,
     verbosity: Optional[str],
-    k_constant: float,
     decimal_precision: int,
-) -> Tuple[Function, Tuple[float, float], float, int, float, int]:
+) -> Tuple[Function, Tuple[float, float], float, float, int, int]:
     """
     Checks the Golden Section Search arguments and returns them prepared for work.
 
@@ -36,27 +36,28 @@ def clean_golden_section_search_arguments(
         the search.
         end (Optional[Union[float, int]]): A float or int representing the ending point
         of the search.
+        k_constant (float): A float representing the constant for the Golden Section
+        Search.
         epsilon (float): A float representing the error threshold.
         verbosity (Optional[str]): A str representing the verbosity of the output during
         algorithm execution.
-        k_constant (float): A float representing the constant for the Golden Section
-        Search.
         decimal_precision (int): An int representing the number of decimal digits to
         round numbers outputted during algorithm execution.
 
     Raises:
         TypeError: Raised if argument function is not a Function.
-        ValueError: Raised if argument start is None.
+        TypeError: Raised if argument start is not a float or int.
+        TypeError: Raised if argument end is passed, but is not a float or int.
+        TypeError: Raised if argument k_constant is not a float.
         TypeError: Raised if argument epsilon is not a float.
         ValueError: Raised if argument epsilon is a negative number.
         TypeError: Raised if argument verbosity is not a string.
         KeyError: Raised if argument verbosity is an invalid key.
-        TypeError: Raised if argument k_constant is not a float.
         TypeError: Raised if argument decimal_precision is not an int.
         ValueError: Raised if argument decimal_precision is negative.
 
     Returns:
-        Tuple[Function, Tuple[float, float], float, int, float, int]: Cleaned arguments.
+        Tuple[Function, Tuple[float, float], float, float, int, int]: Cleaned arguments.
     """
     if not isinstance(function, Function):
         raise TypeError(
@@ -64,13 +65,28 @@ def clean_golden_section_search_arguments(
             f"{type(function)}."
         )
 
-    if start is None:
-        raise ValueError("Argument start mustn't be None!")
-    else:
-        interval = (float(start),)
+    if not isinstance(start, (float, int)):
+        raise TypeError(
+            "Expected argument start to be a float or int, instead it is "
+            f"{type(start)}"
+        )
 
-        if end is not None:
-            interval = interval + (float(end),)
+    interval = (float(start),)
+
+    if end is not None:
+        if not isinstance(end, (float, int)):
+            raise TypeError(
+                "Expected argument end to be a float or int, instead it is "
+                f"{type(end)}"
+            )
+
+        interval = interval + (float(end),)
+
+    if not isinstance(k_constant, float):
+        raise TypeError(
+            "Expected argument k_constant to be a float, instead it is "
+            f"{type(k_constant)}."
+        )
 
     if not isinstance(epsilon, float):
         raise TypeError(
@@ -111,12 +127,6 @@ def clean_golden_section_search_arguments(
 
     verbosity = constants.GOLDEN_SECTION_VERBOSITY_DICT[verbosity]
 
-    if not isinstance(k_constant, float):
-        raise TypeError(
-            "Expected argument k_constant to be a float, instead it is "
-            f"{type(k_constant)}."
-        )
-
     if not isinstance(decimal_precision, int):
         raise TypeError(
             "Expected argument decimal_precision to be an int, instead it is "
@@ -129,7 +139,7 @@ def clean_golden_section_search_arguments(
             f"{decimal_precision}."
         )
 
-    return function, interval, epsilon, verbosity, k_constant, decimal_precision
+    return function, interval, k_constant, epsilon, verbosity, decimal_precision
 
 
 def clean_find_unimodality_interval_arguments(
@@ -267,13 +277,13 @@ def golden_section_search(
     function: Function,
     start: Union[float, int],
     end: Optional[Union[float, int]] = None,
+    k_constant: float = constants.GOLDEN_SECTION_K_CONSTANT,
     epsilon: float = 1e-6,
     verbosity: Optional[str] = None,
-    k_constant: float = constants.GOLDEN_SECTION_K_CONSTANT,
     decimal_precision: int = 3,
 ) -> float:
     """
-    Uses Golden Section Search to find an 1D optimum of a function.
+    Uses Golden Section Search to find a 1D optimum of a function.
 
     Args:
         function (Function): A Function representing the loss function.
@@ -282,13 +292,13 @@ def golden_section_search(
         end (Optional[Union[float, int]], optional): A float or int representing the
         right bound of the starting interval. Defaults to None (finds the unimodality
         interval based on argument start).
+        k_constant (float, optional): A float representing the constant for the Golden
+        Section Search. Defaults to constants.GOLDEN_SECTION_K_CONSTANT.
         epsilon (float, optional): A float representing the error threshold. Defaults to
         1e-6.
         verbosity (Optional[str], optional): A str representing the verbosity of the
         output during algorithm execution. Defaults to None (no output during algorithm
         execution).
-        k_constant (float, optional): A float representing the constant for the Golden
-        Section Search. Defaults to constants.GOLDEN_SECTION_K_CONSTANT.
         decimal_precision (int, optional): An int representing the number of decimal
         digits to round numbers outputted during algorithm execution. Defaults to 3.
 
@@ -298,17 +308,17 @@ def golden_section_search(
     (
         function,
         interval,
+        k_constant,
         epsilon,
         verbosity,
-        k_constant,
         decimal_precision,
     ) = clean_golden_section_search_arguments(
         function=function,
         start=start,
         end=end,
+        k_constant=k_constant,
         epsilon=epsilon,
         verbosity=verbosity,
-        k_constant=k_constant,
         decimal_precision=decimal_precision,
     )
 

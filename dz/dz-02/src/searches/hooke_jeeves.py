@@ -14,7 +14,7 @@
 
 import copy
 import sys
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -29,8 +29,42 @@ def clean_hooke_jeeves_search_arguments(
     epsilon: Optional[np.ndarray],
     max_iterations: int,
     verbosity: Optional[str],
-    decimal_precision: int = 3,
+    decimal_precision: int,
 ) -> Tuple[Function, np.ndarray, np.ndarray, np.ndarray, int, int, int]:
+    """
+    Checks the Hooke-Jeeves Search arguments and returns them prepared for work.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (np.ndarray): A numpy.ndarray representing the starting point of the
+        search.
+        stride (Optional[np.ndarray]): A numpy.ndarray representing the movement vector.
+        epsilon (Optional[np.ndarray]): A numpy.ndarray representing the error
+        threshold vector.
+        max_iterations (int): An int representing the maximum number of iterations
+        before the algorithm times out and returns the last found optimum.
+        verbosity (Optional[str]): A str representing the verbosity of the output during
+        algorithm execution.
+        decimal_precision (int): An int representing the number of decimal digits to
+        round numbers outputted during algorithm execution.
+
+    Raises:
+        TypeError: Raised if argument function is not a Function.
+        TypeError: Raised if argument start is not a numpy.ndarray.
+        TypeError: Raised if argument stride is not a numpy.ndarray.
+        TypeError: Raised if argument epsilon is not a numpy.ndarray.
+        ValueError: Raised if argument epsilon contains at least one negative element.
+        TypeError: Raised if argument max_iterations is not an int.
+        ValueError: Raised if argument max_iterations is a negative number.
+        TypeError: Raised if argument verbosity is not a str.
+        KeyError: Raised if argument verbosity is an invalid key.
+        TypeError: Raised if argument decimal_precision is not an int.
+        ValueError: Raised if argument decimal_precision is a negative number.
+
+    Returns:
+        Tuple[Function, np.ndarray, np.ndarray, np.ndarray, int, int, int]: Cleaned
+        arguments.
+    """
     if not isinstance(function, Function):
         raise TypeError(
             "Expected argument function to be a Function, instead it is "
@@ -76,7 +110,7 @@ def clean_hooke_jeeves_search_arguments(
         )
 
     if max_iterations < 1:
-        raise TypeError(
+        raise ValueError(
             "Expected argument max_interations to be a positive integer, instead it is "
             f"{max_iterations}."
         )
@@ -135,12 +169,28 @@ def clean_hooke_jeeves_search_arguments(
 
 def get_survey_points(
     function: Function, start: np.ndarray, stride: np.ndarray
-) -> np.ndarray:
+) -> List[np.ndarray]:
+    """
+    Returns the Hooke-Jeeves __survey points. DO NOT use this for the Hooke-Jeeves
+    search as it doesn't count function calls!
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (np.ndarray): A numpy.ndarray representing the starting point of the
+        survey.
+        stride (np.ndarray): A numpy.ndarray representing the movement vector.
+
+    Returns:
+        List[np.ndarray]: A List[numpy.ndarray] representing the list of points the
+        __survey method would explore.
+    """
     # Copy this to avoid editing the original value
     point = copy.deepcopy(start)
     points = list()
 
     for i in range(start.shape[0]):
+        # We use vectors as terms because directly editing
+        # numpy.ndarray elements doesn't seem to work!
         stride_one_hot = np.zeros(stride.shape)
         stride_one_hot[i] = stride[i]
 
@@ -161,10 +211,25 @@ def get_survey_points(
 
 
 def __survey(function: Function, start: np.ndarray, stride: np.ndarray) -> np.ndarray:
+    """
+    Surveys the immediate neighbourhood of argument start and returns the local optimum
+    based on argument function.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (np.ndarray): A numpy.ndarray representing the starting point of the
+        survey.
+        stride (np.ndarray): A numpy.ndarray representing the movement vector.
+
+    Returns:
+        np.ndarray: A numpy.ndarray representing the local optimum of the loss function.
+    """
     # Copy this to avoid editing the original value
     point = copy.deepcopy(start)
 
     for i in range(start.shape[0]):
+        # We use vectors as terms because directly editing
+        # numpy.ndarray elements doesn't seem to work!
         stride_one_hot = np.zeros(stride.shape)
         stride_one_hot[i] = stride[i]
 
@@ -183,6 +248,18 @@ def __survey(function: Function, start: np.ndarray, stride: np.ndarray) -> np.nd
 
 
 def __time_to_stop(stride: np.ndarray, min_stride: np.ndarray) -> bool:
+    """
+    Checks if it's time to stop Hooke-Jeeves Search.
+
+    Args:
+        stride (np.ndarray): A numpy.ndarray representing the movement vector.
+        min_stride (np.ndarray): A numpy.ndarray representing the minimum allowed
+        movement vector. In practice equal to half the epsilon.
+
+    Returns:
+        bool: True if the stopping condition of Hooke-Jeeves search has been met, False
+        otherwise.
+    """
     # Although not specified, I presume all is the correct
     # aggregator function here, otherwise one large epsilon
     # element breaks the whole thing.
@@ -197,10 +274,26 @@ def __print_hjs_values(
     verbosity: int,
     decimal_precision: int,
 ):
-    points = (base_point, search_start_point, current_point)
+    """
+    Prints the Hooke Jeeves Search values.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        base_point (np.ndarray): A numpy.ndarray representing the base point of the
+        Hooke-Jeeves Search (AKA x_b).
+        search_start_point (np.ndarray): A numpy.ndarray representing the search start
+        point of Hooke-Jeeves Search (AKA x_p).
+        current_point (np.ndarray): A numpy.ndarray representing the current point of
+        Hooke-Jeeves Search (AKA x_n).
+        verbosity (int): An int representing the level of verbosity of the output during
+        algorithm execution.
+        decimal_precision (int): An int representing the number of decimal digits to
+        round numbers outputted during algorithm execution.
+    """
     if verbosity == 0:
         return
 
+    points = (base_point, search_start_point, current_point)
     point_identifiers = ("x_b", "x_p", "x_n")
     point_strings = [f"{np.around(x, decimal_precision)}" for x in points]
 
@@ -223,6 +316,7 @@ def __print_hjs_values(
             )
         )
 
+    # Do this because multi-line outputs get cluttered easily.
     print()
 
 
@@ -235,6 +329,28 @@ def hooke_jeeves_search(
     verbosity: Optional[str] = None,
     decimal_precision: int = 3,
 ) -> np.ndarray:
+    """
+    Uses Golden Section Search to find an n-D optimum of a function.
+
+    Args:
+        function (Function): A Function representing the loss function.
+        start (np.ndarray): A numpy.ndarray representing the starting point of the
+        search.
+        stride (Optional[np.ndarray], optional): A numpy.ndarray representing the
+        movement vector. Defaults to None (0.5 for all elements).
+        epsilon (Optional[np.ndarray], optional): A numpy.ndarray representing the error
+        threshold vector. Defaults to None (1e-6 for all elements).
+        max_iterations (int, optional): An int representing the maximum number of
+        iterations before the algorithm times out and returns the last found optimum.
+        Defaults to 100000.
+        verbosity (Optional[str], optional): A str representing the verbosity of the
+        output during algorithm execution. Defaults to None (no output).
+        decimal_precision (int, optional): An int representing the number of decimal
+        digits to round numbers outputted during algorithm execution. Defaults to 3.
+
+    Returns:
+        np.ndarray: [description]
+    """
     (
         function,
         start,
