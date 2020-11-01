@@ -15906,7 +15906,7 @@ $$
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Nelder-Mead-simplex">Nelder Mead simplex<a class="anchor-link" href="#Nelder-Mead-simplex">&#182;</a></h4>
+<h4 id="Nelder-Mead-simpleks">Nelder Mead simpleks<a class="anchor-link" href="#Nelder-Mead-simpleks">&#182;</a></h4>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -16714,7 +16714,7 @@ $$
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 88.48it/s]
+<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 114.92it/s]
 </pre>
 </div>
 </div>
@@ -16898,7 +16898,7 @@ $$
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 43.09it/s]
+<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 51.23it/s]
 </pre>
 </div>
 </div>
@@ -17059,10 +17059,10 @@ $$
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 <span class="n">t5_range</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">t5_n_repeats</span><span class="p">))</span>
-<span class="n">iterator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">t5_range</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-<span class="n">iterator</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">&quot;Računam Nelder Mead simplekse&quot;</span><span class="p">)</span>
+<span class="n">t5_iterator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">t5_range</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<span class="n">t5_iterator</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">&quot;Računam Nelder Mead simplekse&quot;</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">t5_iterator</span><span class="p">:</span>
     <span class="n">t5_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     
     <span class="n">t5_result</span> <span class="o">=</span> <span class="n">nelder_mead_simplex_search</span><span class="p">(</span>
@@ -17071,7 +17071,7 @@ $$
     <span class="p">)</span>
     <span class="n">t5_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t5_result</span><span class="p">)</span>
     
-<span class="n">iterator</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">t5_iterator</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -17091,7 +17091,7 @@ $$
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Računam Nelder Mead simplekse: 100%|██████████| 10000/10000 [00:35&lt;00:00, 282.72it/s]
+<pre>Računam Nelder Mead simplekse: 100%|██████████| 10000/10000 [00:29&lt;00:00, 340.50it/s]
 </pre>
 </div>
 </div>
@@ -17148,7 +17148,7 @@ $$
         <span class="sa">f</span><span class="s2">&quot;pronađen $</span><span class="si">{</span><span class="n">t5_n_optima_found</span><span class="si">}</span><span class="s2">$ puta. Ovo bi sugeriralo &quot;</span>
         <span class="s2">&quot;da je vjerojatnost pronalaženja globalnog optimuma za &quot;</span>
         <span class="s2">&quot;početnu točku iz intervala $ [ -50, 50 ] $ &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;približno </span><span class="si">{</span><span class="n">t5_global_optimum_probability</span> <span class="o">*</span> <span class="mi">100</span><span class="si">:</span><span class="s2">.02f</span><span class="si">}</span><span class="s2">%.&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;približno $</span><span class="si">{</span><span class="n">t5_global_optimum_probability</span> <span class="o">*</span> <span class="mi">100</span><span class="si">:</span><span class="s2">.02f</span><span class="si">}</span><span class="s2">\%$.&quot;</span>
     <span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
@@ -17171,7 +17171,7 @@ $$
 
 
 <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output " data-mime-type="text/markdown">
-<p>U $10000$ ponavljanja globalni optimum je pronađen $69$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno 0.69%.</p>
+<p>U $10000$ ponavljanja globalni optimum je pronađen $58$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.58\%$.</p>
 
 </div>
 
@@ -17181,6 +17181,302 @@ $$
 
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<hr>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="Bonus:-aproksimacija-pretra&#382;ivanjem-po-koordinatnim-osima">Bonus: aproksimacija pretra&#382;ivanjem po koordinatnim osima<a class="anchor-link" href="#Bonus:-aproksimacija-pretra&#382;ivanjem-po-koordinatnim-osima">&#182;</a></h4>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[70]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_function_bonus</span> <span class="o">=</span> <span class="n">t5_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[71]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_results_bonus</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">t5_range_bonus</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">t5_n_repeats</span><span class="p">))</span>
+<span class="n">t5_iterator_bonus</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">t5_range_bonus</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<span class="n">t5_iterator_bonus</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">&quot;Pretražujem po koordinatnim osima&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">t5_iterator_bonus</span><span class="p">:</span>
+    <span class="n">t5_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="n">t5_result_bonus</span> <span class="o">=</span> <span class="n">axis_search</span><span class="p">(</span>
+        <span class="n">function</span><span class="o">=</span><span class="n">t5_function_bonus</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">t5_start</span>
+    <span class="p">)</span>
+    <span class="n">t5_results_bonus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t5_result_bonus</span><span class="p">)</span>
+    
+<span class="n">t5_iterator_bonus</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Pretražujem po koordinatnim osima: 100%|██████████| 10000/10000 [00:59&lt;00:00, 168.98it/s]
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[72]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_values_bonus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">t5_function_bonus</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">t5_solution</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">t5_results_bonus</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">t5_optimum_found_bonus</span> <span class="o">=</span> <span class="n">t5_values_bonus</span> <span class="o">&lt;</span> <span class="n">t5_epsilon</span>
+<span class="n">t5_n_optima_found_bonus</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">t5_optimum_found_bonus</span><span class="p">)</span>
+<span class="n">t5_global_optimum_probability_bonus</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t5_n_optima_found_bonus</span> <span class="o">/</span> <span class="n">t5_n_repeats</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[73]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
+    <span class="n">Markdown</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;U $</span><span class="si">{</span><span class="n">t5_n_repeats</span><span class="si">}</span><span class="s2">$ ponavljanja globalni optimum je &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;pronađen $</span><span class="si">{</span><span class="n">t5_n_optima_found_bonus</span><span class="si">}</span><span class="s2">$ puta. Ovo bi sugeriralo &quot;</span>
+        <span class="s2">&quot;da je vjerojatnost pronalaženja globalnog optimuma za &quot;</span>
+        <span class="s2">&quot;početnu točku iz intervala $ [ -50, 50 ] $ &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;približno $</span><span class="si">{</span><span class="n">t5_global_optimum_probability_bonus</span> <span class="o">*</span> <span class="mi">100</span><span class="si">:</span><span class="s2">.02f</span><span class="si">}</span><span class="s2">\%$.&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output " data-mime-type="text/markdown">
+<p>U $10000$ ponavljanja globalni optimum je pronađen $77$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.77\%$.</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<hr>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h4 id="Bonus:-aproksimacija-Hooke-Jeeves-postupkom">Bonus: aproksimacija Hooke-Jeeves postupkom<a class="anchor-link" href="#Bonus:-aproksimacija-Hooke-Jeeves-postupkom">&#182;</a></h4>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[74]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_function_bonus_2</span> <span class="o">=</span> <span class="n">t5_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[75]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_results_bonus_2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">t5_range_bonus_2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">t5_n_repeats</span><span class="p">))</span>
+<span class="n">t5_iterator_bonus_2</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">t5_range_bonus_2</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<span class="n">t5_iterator_bonus_2</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">&quot;Provodim Hooke-Jeeves postupke&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">t5_iterator_bonus_2</span><span class="p">:</span>
+    <span class="n">t5_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="n">t5_result_bonus_2</span> <span class="o">=</span> <span class="n">axis_search</span><span class="p">(</span>
+        <span class="n">function</span><span class="o">=</span><span class="n">t5_function_bonus_2</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">t5_start</span>
+    <span class="p">)</span>
+    <span class="n">t5_results_bonus_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t5_result_bonus_2</span><span class="p">)</span>
+    
+<span class="n">t5_iterator_bonus_2</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Provodim Hooke-Jeeves postupke: 100%|██████████| 10000/10000 [00:59&lt;00:00, 169.05it/s]
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[76]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_values_bonus_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">t5_function_bonus_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">t5_solution</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">t5_results_bonus_2</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">t5_optimum_found_bonus_2</span> <span class="o">=</span> <span class="n">t5_values_bonus_2</span> <span class="o">&lt;</span> <span class="n">t5_epsilon</span>
+<span class="n">t5_n_optima_found_bonus_2</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">t5_optimum_found_bonus_2</span><span class="p">)</span>
+<span class="n">t5_global_optimum_probability_bonus_2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t5_n_optima_found_bonus_2</span> <span class="o">/</span> <span class="n">t5_n_repeats</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[77]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
+    <span class="n">Markdown</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;U $</span><span class="si">{</span><span class="n">t5_n_repeats</span><span class="si">}</span><span class="s2">$ ponavljanja globalni optimum je &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;pronađen $</span><span class="si">{</span><span class="n">t5_n_optima_found_bonus_2</span><span class="si">}</span><span class="s2">$ puta. Ovo bi sugeriralo &quot;</span>
+        <span class="s2">&quot;da je vjerojatnost pronalaženja globalnog optimuma za &quot;</span>
+        <span class="s2">&quot;početnu točku iz intervala $ [ -50, 50 ] $ &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;približno $</span><span class="si">{</span><span class="n">t5_global_optimum_probability_bonus_2</span> <span class="o">*</span> <span class="mi">100</span><span class="si">:</span><span class="s2">.02f</span><span class="si">}</span><span class="s2">\%$.&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output " data-mime-type="text/markdown">
+<p>U $10000$ ponavljanja globalni optimum je pronađen $64$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.64\%$.</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<hr>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p><strong>Zaključak</strong>: Vidimo da očekivana učestalost pronalaska minimuma za ove parametre ne ovisi previše o algoritmu, te da varira od $0.5 \%$ do $1 \%$.</p>
+
+</div>
 </div>
 </body>
 
