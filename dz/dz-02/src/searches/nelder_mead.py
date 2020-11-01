@@ -27,11 +27,12 @@ def clean_nelder_mead_simplex_search_arguments(
     beta: float,
     gamma: float,
     sigma: float,
+    use_jakobovic_expand: bool,
     epsilon: float,
     max_iterations: int,
     verbosity: Optional[str],
     decimal_precision: int,
-) -> Tuple[Function, int, float, float, float, float, int, int, int]:
+) -> Tuple[Function, float, float, float, float, bool, float, int, int, int]:
     """
     Checks the Nelder Mead Simplex Search arguments and returns them prepared for work.
 
@@ -41,6 +42,9 @@ def clean_nelder_mead_simplex_search_arguments(
         beta (float): A float used in point contraction.
         gamma (float): A float used in point expansion.
         sigma (float): A float used when moving points to the optimum.
+        use_jakobovic_expand (bool): A bool determining whether or not to use the
+        __expand_jakobovic method instead of the __expand method for point expansion.
+        Defaults to False.
         epsilon (float): A float representing the error threshold.
         max_iterations (int): An int representing the maximum number of iterations
         before the algorithm times out and returns the last found optimum.
@@ -55,8 +59,9 @@ def clean_nelder_mead_simplex_search_arguments(
         TypeError: Raised if argument beta is not a float.
         TypeError: Raised if argument gamma is not a float.
         TypeError: Raised if argument sigma is not a float.
+        TypeError: Raised if argument use_jakobovic_expand is not a bool.
         TypeError: Raised if argument epsilon is not a float.
-        ValueError: Raised if argument alpha is a negative number.
+        ValueError: Raised if argument epsilon is a negative number.
         TypeError: Raised if argument max_iterations is not an int.
         ValueError: Raised if argument max_iterations is a negative number.
         TypeError: Raised if argument verbosity is not a str.
@@ -65,7 +70,7 @@ def clean_nelder_mead_simplex_search_arguments(
         ValueError: Raised if argument decimal_precision is a negative number.
 
     Returns:
-        Tuple[Function, int, float, float, float, float, int, int, int]: Cleaned
+        Tuple[Function, float, float, float, float, bool, float, int, int, int]: Cleaned
         arguments.
     """
     if not isinstance(function, Function):
@@ -104,6 +109,12 @@ def clean_nelder_mead_simplex_search_arguments(
     if not isinstance(sigma, float):
         raise TypeError(
             "Expected argument sigma to be a float, instead it is " f"{type(sigma)}."
+        )
+
+    if not isinstance(use_jakobovic_expand, bool):
+        raise TypeError(
+            "Expected argument use_jakobovic_expand to be a bool, instead it is "
+            f"{type(use_jakobovic_expand)}."
         )
 
     if not isinstance(epsilon, float):
@@ -177,6 +188,7 @@ def clean_nelder_mead_simplex_search_arguments(
         beta,
         gamma,
         sigma,
+        use_jakobovic_expand,
         epsilon,
         max_iterations,
         verbosity,
@@ -301,6 +313,25 @@ def __expand(
     return (1 - gamma) * centroid + gamma * reflected_point
 
 
+def __expand_jakobovic(
+    centroid: np.ndarray, reflected_point: np.ndarray, gamma: float
+) -> np.ndarray:
+    """
+    Expands argument reflected_point wrt centroid by argument alpha. This is a modified
+    version which is supposedly the correct one, as said by prof. Jakobović.
+
+    Args:
+        centroid (np.ndarray): A numpy.ndarray representing the simplex centroid.
+        maximum_point (np.ndarray): A numpy.ndarray representing the worst point of a
+        simplex.
+        gamma (float): A float representing the amount a point will be expanded.
+
+    Returns:
+        np.ndarray: A numpy.ndarray representing the expanded point.
+    """
+    return (1 - gamma) * centroid - gamma * reflected_point
+
+
 def __time_to_stop(
     simplex_values: np.ndarray, centroid_value: float, epsilon: float
 ) -> bool:
@@ -362,6 +393,7 @@ def nelder_mead_simplex_search(
     beta: float = 0.5,
     gamma: float = 2.0,
     sigma: float = 0.5,
+    use_jakobovic_expand: bool = False,
     epsilon: float = 1e-6,
     max_iterations: int = 100000,
     verbosity: Optional[str] = None,
@@ -381,6 +413,9 @@ def nelder_mead_simplex_search(
         gamma (float, optional): A float used in point expansion. Defaults to 2.0.
         sigma (float, optional): A float used when moving points to the optimum.
         Defaults to 0.5.
+        use_jakobovic_expand (float, optional): A bool determining whether or not to use
+        the __expand_jakobovic method instead of the __expand method for point
+        expansion. Defaults to False.
         epsilon (float, optional): A float representing the error threshold. Defaults to
         1e-6.
         max_iterations (int, optional): An int representing the maximum number of
@@ -401,6 +436,7 @@ def nelder_mead_simplex_search(
         beta,
         gamma,
         sigma,
+        use_jakobovic_expand,
         epsilon,
         max_iterations,
         verbosity,
@@ -411,6 +447,7 @@ def nelder_mead_simplex_search(
         beta=beta,
         gamma=gamma,
         sigma=sigma,
+        use_jakobovic_expand=use_jakobovic_expand,
         epsilon=epsilon,
         max_iterations=max_iterations,
         verbosity=verbosity,
@@ -422,6 +459,8 @@ def nelder_mead_simplex_search(
     simplex_values = np.array([function(x) for x in simplex_points])
 
     timed_out = True
+
+    expansion_method = __expand_jakobovic if use_jakobovic_expand else __expand
 
     for _ in range(max_iterations):
         minimum_index = np.argmin(simplex_values)
@@ -443,7 +482,7 @@ def nelder_mead_simplex_search(
         minimum_value = simplex_values[minimum_index]
 
         if reflected_value < minimum_value:
-            expanded_point = __expand(
+            expanded_point = expansion_method(
                 centroid=centroid, reflected_point=reflected_point, gamma=gamma
             )
             expanded_value = function(expanded_point)

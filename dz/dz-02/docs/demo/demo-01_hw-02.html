@@ -13925,13 +13925,79 @@ $$
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Hooke-Jeeves-postupak">Hooke-Jeeves postupak<a class="anchor-link" href="#Hooke-Jeeves-postupak">&#182;</a></h4>
+<h4 id="Nelder-Mead-simpleks-(Jakobovi&#263;eva-verzija)">Nelder Mead simpleks (Jakobovi&#263;eva verzija)<a class="anchor-link" href="#Nelder-Mead-simpleks-(Jakobovi&#263;eva-verzija)">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_nelder_mead_simplex_search_function_j</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
+
+<span class="n">t1_nelder_mead_simplex_search_result_j</span> <span class="o">=</span> <span class="n">nelder_mead_simplex_search</span><span class="p">(</span>
+    <span class="n">function</span><span class="o">=</span><span class="n">t1_nelder_mead_simplex_search_function_j</span><span class="p">,</span>
+    <span class="n">start</span><span class="o">=</span><span class="n">t1_start</span><span class="p">,</span>
+    <span class="n">use_jakobovic_expand</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
+    <span class="n">Markdown</span><span class="p">(</span>
+        <span class="s2">&quot;Minimum koji je pronašao **Nelder Mead simpleks** &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;je $</span><span class="si">{</span><span class="n">t1_nelder_mead_simplex_search_result_j</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">$ &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(uz $</span><span class="si">{</span><span class="n">t1_nelder_mead_simplex_search_function_j</span><span class="o">.</span><span class="n">call_count</span><span class="si">}</span><span class="s2">$ &quot;</span>
+        <span class="s2">&quot;poziva funkcije).&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<p>Minimum koji je pronašao <strong>Nelder Mead simpleks</strong> je $3$ (uz $53$ poziva funkcije).</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Hooke-Jeeves-postupak">Hooke-Jeeves postupak<a class="anchor-link" href="#Hooke-Jeeves-postupak">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_hooke_jeeves_search_function</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -13949,7 +14015,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -13997,7 +14063,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_start_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">15</span><span class="p">])</span>
@@ -14018,7 +14084,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_golden_section_function_2</span> <span class="o">=</span> <span class="n">t1_function_scalar</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14036,7 +14102,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14082,7 +14148,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_axis_search_function_2</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14100,7 +14166,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14146,7 +14212,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_nelder_mead_simplex_search_function_2</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14164,7 +14230,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14205,13 +14271,79 @@ $$
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Nelder-Mead-simpleks-2-(Jakobovi&#263;eva-verzija)">Nelder Mead simpleks 2 (Jakobovi&#263;eva verzija)<a class="anchor-link" href="#Nelder-Mead-simpleks-2-(Jakobovi&#263;eva-verzija)">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_nelder_mead_simplex_search_function_j_2</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
+
+<span class="n">t1_nelder_mead_simplex_search_result_j_2</span> <span class="o">=</span> <span class="n">nelder_mead_simplex_search</span><span class="p">(</span>
+    <span class="n">function</span><span class="o">=</span><span class="n">t1_nelder_mead_simplex_search_function_j_2</span><span class="p">,</span>
+    <span class="n">start</span><span class="o">=</span><span class="n">t1_start_2</span><span class="p">,</span>
+    <span class="n">use_jakobovic_expand</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
+    <span class="n">Markdown</span><span class="p">(</span>
+        <span class="s2">&quot;Minimum koji je pronašao **Nelder Mead simpleks** &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;je $</span><span class="si">{</span><span class="n">t1_nelder_mead_simplex_search_result_j_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">$ &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(uz $</span><span class="si">{</span><span class="n">t1_nelder_mead_simplex_search_function_j_2</span><span class="o">.</span><span class="n">call_count</span><span class="si">}</span><span class="s2">$ &quot;</span>
+        <span class="s2">&quot;poziva funkcije).&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<p>Minimum koji je pronašao <strong>Nelder Mead simpleks</strong> je $3$ (uz $68$ poziva funkcije).</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Hooke-Jeeves-postupak-2">Hooke-Jeeves postupak 2<a class="anchor-link" href="#Hooke-Jeeves-postupak-2">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_hooke_jeeves_search_function_2</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14229,7 +14361,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14285,7 +14417,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_start_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">])</span>
@@ -14306,7 +14438,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_golden_section_function_3</span> <span class="o">=</span> <span class="n">t1_function_scalar</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14324,7 +14456,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14370,7 +14502,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_axis_search_function_3</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14388,7 +14520,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14434,7 +14566,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_nelder_mead_simplex_search_function_3</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14452,7 +14584,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14493,13 +14625,79 @@ $$
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Nelder-Mead-simpleks-3-(Jakobovi&#263;eva-verzija)">Nelder Mead simpleks 3 (Jakobovi&#263;eva verzija)<a class="anchor-link" href="#Nelder-Mead-simpleks-3-(Jakobovi&#263;eva-verzija)">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_nelder_mead_simplex_search_function_j_3</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
+
+<span class="n">t1_nelder_mead_simplex_search_result_j_3</span> <span class="o">=</span> <span class="n">nelder_mead_simplex_search</span><span class="p">(</span>
+    <span class="n">function</span><span class="o">=</span><span class="n">t1_nelder_mead_simplex_search_function_j_3</span><span class="p">,</span>
+    <span class="n">start</span><span class="o">=</span><span class="n">t1_start_3</span><span class="p">,</span>
+    <span class="n">use_jakobovic_expand</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
+    <span class="n">Markdown</span><span class="p">(</span>
+        <span class="s2">&quot;Minimum koji je pronašao **Nelder Mead simpleks** &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;je $</span><span class="si">{</span><span class="n">t1_nelder_mead_simplex_search_result_j_3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">$ &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(uz $</span><span class="si">{</span><span class="n">t1_nelder_mead_simplex_search_function_j_3</span><span class="o">.</span><span class="n">call_count</span><span class="si">}</span><span class="s2">$ &quot;</span>
+        <span class="s2">&quot;poziva funkcije).&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<p>Minimum koji je pronašao <strong>Nelder Mead simpleks</strong> je $3$ (uz $323$ poziva funkcije).</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Hooke-Jeeves-postupak-3">Hooke-Jeeves postupak 3<a class="anchor-link" href="#Hooke-Jeeves-postupak-3">&#182;</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_hooke_jeeves_search_function_3</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14517,7 +14715,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14575,7 +14773,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1_nelder_mead_simplex_search_special_function</span> <span class="o">=</span> <span class="n">t1_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14594,7 +14792,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -14657,7 +14855,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2_f1</span> <span class="o">=</span> <span class="n">f1</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -14687,7 +14885,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2_axis_search_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">t2_functions</span><span class="p">]</span>
@@ -14704,7 +14902,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2_axis_search_results_formatted</span> <span class="o">=</span> <span class="p">(</span>
@@ -14781,7 +14979,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2_nelder_mead_simplex_search_functions</span> <span class="o">=</span> <span class="p">[</span>
@@ -14800,7 +14998,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[50]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2_nelder_mead_simplex_search_results_formatted</span> <span class="o">=</span> <span class="p">(</span>
@@ -14877,7 +15075,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2_hooke_jeeves_search_functions</span> <span class="o">=</span> <span class="p">[</span>
@@ -14897,7 +15095,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[52]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2_hooke_jeeves_search_results_formatted</span> <span class="o">=</span> <span class="p">(</span>
@@ -15054,7 +15252,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="prompt input_prompt">In&nbsp;[53]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2_hooke_jeeves_search_special_function</span> <span class="o">=</span> <span class="n">t2_f4</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -15073,7 +15271,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[54]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -15169,7 +15367,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="prompt input_prompt">In&nbsp;[55]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3_function</span> <span class="o">=</span> <span class="n">f4</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -15190,7 +15388,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="prompt input_prompt">In&nbsp;[56]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3_nelder_mead_simplex_search_function</span> <span class="o">=</span> <span class="n">t3_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -15211,7 +15409,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="prompt input_prompt">In&nbsp;[57]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -15260,7 +15458,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[52]:</div>
+<div class="prompt input_prompt">In&nbsp;[58]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3_hooke_jeeves_search_function</span> <span class="o">=</span> <span class="n">t3_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -15281,7 +15479,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[53]:</div>
+<div class="prompt input_prompt">In&nbsp;[59]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -15347,7 +15545,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[54]:</div>
+<div class="prompt input_prompt">In&nbsp;[60]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3_plot_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>
@@ -15410,7 +15608,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3_survey_points</span> <span class="o">=</span> <span class="n">get_survey_points</span><span class="p">(</span>
@@ -15427,7 +15625,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[56]:</div>
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t3_special_fig</span><span class="p">,</span> <span class="n">t3_special_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
@@ -15516,7 +15714,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[57]:</div>
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_function</span> <span class="o">=</span> <span class="n">f1</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -15537,7 +15735,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[58]:</div>
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
@@ -15558,7 +15756,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[59]:</div>
+<div class="prompt input_prompt">In&nbsp;[65]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_result_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -15598,7 +15796,7 @@ $$
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 112.64it/s]
+<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 105.55it/s]
 </pre>
 </div>
 </div>
@@ -15617,7 +15815,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[60]:</div>
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_calls</span> <span class="o">=</span> <span class="p">[</span><span class="n">t4_result_dict</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s2">&quot;call_count&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">t4_range</span><span class="p">]</span>
@@ -15641,7 +15839,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[61]:</div>
+<div class="prompt input_prompt">In&nbsp;[67]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_fig</span><span class="p">,</span> <span class="n">t4_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">))</span>
@@ -15725,7 +15923,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[62]:</div>
+<div class="prompt input_prompt">In&nbsp;[68]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_special_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>
@@ -15738,7 +15936,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[63]:</div>
+<div class="prompt input_prompt">In&nbsp;[69]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_special_result_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -15778,7 +15976,7 @@ $$
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 50.49it/s]
+<pre>Računam Nelder Mead Simpleks uz pomak 20: 100%|██████████| 20/20 [00:00&lt;00:00, 45.80it/s]
 </pre>
 </div>
 </div>
@@ -15797,7 +15995,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="prompt input_prompt">In&nbsp;[70]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_special_calls</span> <span class="o">=</span> <span class="p">[</span><span class="n">t4_special_result_dict</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s2">&quot;call_count&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">t4_special_range</span><span class="p">]</span>
@@ -15821,7 +16019,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[65]:</div>
+<div class="prompt input_prompt">In&nbsp;[71]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t4_special_fig</span><span class="p">,</span> <span class="n">t4_special_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">))</span>
@@ -15922,7 +16120,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="prompt input_prompt">In&nbsp;[72]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_n_repeats</span> <span class="o">=</span> <span class="mi">10000</span>
@@ -15937,7 +16135,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[67]:</div>
+<div class="prompt input_prompt">In&nbsp;[73]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -15971,7 +16169,7 @@ $$
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Računam Nelder Mead simplekse: 100%|██████████| 10000/10000 [00:30&lt;00:00, 328.06it/s]
+<pre>Računam Nelder Mead simplekse: 100%|██████████| 10000/10000 [00:30&lt;00:00, 323.82it/s]
 </pre>
 </div>
 </div>
@@ -15998,7 +16196,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[68]:</div>
+<div class="prompt input_prompt">In&nbsp;[74]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_epsilon</span> <span class="o">=</span> <span class="mf">1e-4</span>
@@ -16016,7 +16214,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="prompt input_prompt">In&nbsp;[75]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -16045,7 +16243,7 @@ $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<p>U $10000$ ponavljanja globalni optimum je pronađen $2$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.02\%$.</p>
+<p>U $10000$ ponavljanja globalni optimum je pronađen $9$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.09\%$.</p>
 
 </div>
 
@@ -16072,7 +16270,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[70]:</div>
+<div class="prompt input_prompt">In&nbsp;[76]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_function_bonus</span> <span class="o">=</span> <span class="n">t5_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -16085,7 +16283,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[71]:</div>
+<div class="prompt input_prompt">In&nbsp;[77]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_results_bonus</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -16119,7 +16317,7 @@ $$
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Pretražujem po koordinatnim osima: 100%|██████████| 10000/10000 [01:02&lt;00:00, 160.41it/s]
+<pre>Pretražujem po koordinatnim osima: 100%|██████████| 10000/10000 [01:02&lt;00:00, 159.05it/s]
 </pre>
 </div>
 </div>
@@ -16130,7 +16328,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[72]:</div>
+<div class="prompt input_prompt">In&nbsp;[78]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_values_bonus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -16149,7 +16347,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="prompt input_prompt">In&nbsp;[79]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -16178,7 +16376,7 @@ $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<p>U $10000$ ponavljanja globalni optimum je pronađen $4$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.04\%$.</p>
+<p>U $10000$ ponavljanja globalni optimum je pronađen $7$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.07\%$.</p>
 
 </div>
 
@@ -16205,7 +16403,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="prompt input_prompt">In&nbsp;[80]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_function_bonus_2</span> <span class="o">=</span> <span class="n">t5_function</span><span class="o">.</span><span class="n">get_new</span><span class="p">()</span>
@@ -16218,7 +16416,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[75]:</div>
+<div class="prompt input_prompt">In&nbsp;[81]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_results_bonus_2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -16252,7 +16450,7 @@ $$
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Provodim Hooke-Jeeves postupke: 100%|██████████| 10000/10000 [01:02&lt;00:00, 160.61it/s]
+<pre>Provodim Hooke-Jeeves postupke: 100%|██████████| 10000/10000 [01:01&lt;00:00, 162.85it/s]
 </pre>
 </div>
 </div>
@@ -16263,7 +16461,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[76]:</div>
+<div class="prompt input_prompt">In&nbsp;[82]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">t5_values_bonus_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
@@ -16282,7 +16480,7 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[77]:</div>
+<div class="prompt input_prompt">In&nbsp;[83]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span>
@@ -16311,7 +16509,7 @@ $$
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<p>U $10000$ ponavljanja globalni optimum je pronađen $8$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.08\%$.</p>
+<p>U $10000$ ponavljanja globalni optimum je pronađen $11$ puta. Ovo bi sugeriralo da je vjerojatnost pronalaženja globalnog optimuma za početnu točku iz intervala $ [ -50, 50 ] $ približno $0.11\%$.</p>
 
 </div>
 
