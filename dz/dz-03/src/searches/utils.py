@@ -28,3 +28,18 @@ def find_optimal_gradient(
     optimal_x = golden_section_search(function=new_function, start=0)
 
     return optimal_x * gradient
+
+
+# NOTE: This is the same as the above, but for Newton-Raphson
+def find_optimal_stride(
+    function: Function,
+    current_point: np.ndarray,
+    stride: np.ndarray,
+):
+    # A new function; used to determine the x for which the new
+    # value along the gradient gives the smallest value.
+    new_function = Function(lambda x: function(current_point - x * stride))
+
+    optimal_x = golden_section_search(function=new_function, start=0)
+
+    return optimal_x * stride

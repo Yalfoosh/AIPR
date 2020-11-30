@@ -9,7 +9,7 @@ from .function import Function
 from .utils import find_optimal_gradient, normalize
 
 
-GRADIENT_SCALING_FUNCTION_DICT = {
+STRIDE_SCALING_FUNCTION_DICT = {
     "none": lambda x, **kwargs: x,
     "normalize": lambda x, **kwargs: normalize(x, epsilon=kwargs.get("epsilon", 1e-6)),
     "find optimal": lambda x, **kwargs: find_optimal_gradient(
@@ -20,10 +20,10 @@ GRADIENT_SCALING_FUNCTION_DICT = {
 }
 
 
-def clean_gradient_descent_arguments(
+def clean_newton_raphson_arguments(
     function: Function,
     start: np.ndarray,
-    gradient_scaling: Optional[str],
+    stride_scaling: Optional[str],
     epsilon: Optional[float],
     max_iterations_without_improvement: int,
     verbosity: Optional[str],
@@ -49,32 +49,32 @@ def clean_gradient_descent_arguments(
 
     start = np.reshape(start, -1)
 
-    if not isinstance(gradient_scaling, str):
+    if not isinstance(stride_scaling, str):
         raise TypeError(
-            "Expected argument gradient_scaling to be a str, instead it is "
-            f"{type(gradient_scaling)}."
+            "Expected argument stride_scaling to be a str, instead it is "
+            f"{type(stride_scaling)}."
         )
 
-    if gradient_scaling not in GRADIENT_SCALING_FUNCTION_DICT:
-        gradient_scaling_dict_length = len(GRADIENT_SCALING_FUNCTION_DICT)
+    if stride_scaling not in STRIDE_SCALING_FUNCTION_DICT:
+        stride_scaling_dict_length = len(STRIDE_SCALING_FUNCTION_DICT)
 
-        if gradient_scaling_dict_length == 0:
-            gradient_scaling_string = "There are no keys available."
-        elif gradient_scaling_dict_length == 1:
-            _key = list(GRADIENT_SCALING_FUNCTION_DICT.keys())[0]
-            gradient_scaling_string = f"The only available key is {_key}."
+        if stride_scaling_dict_length == 0:
+            stride_scaling_string = "There are no keys available."
+        elif stride_scaling_dict_length == 1:
+            _key = list(STRIDE_SCALING_FUNCTION_DICT.keys())[0]
+            stride_scaling_string = f"The only available key is {_key}."
         else:
-            _keys = list(sorted(GRADIENT_SCALING_FUNCTION_DICT.keys()))
-            gradient_scaling_string = "The available keys are "
-            gradient_scaling_string += ", ".join([str(x) for x in _keys[:-1]])
-            gradient_scaling_string += f" and {_keys[-1]}."
+            _keys = list(sorted(STRIDE_SCALING_FUNCTION_DICT.keys()))
+            stride_scaling_string = "The available keys are "
+            stride_scaling_string += ", ".join([str(x) for x in _keys[:-1]])
+            stride_scaling_string += f" and {_keys[-1]}."
 
         raise KeyError(
-            f'Gradient scaling key "{gradient_scaling}" is not in the Gradient Scaling '
-            f"Function dictionary. {gradient_scaling_string}"
+            f'Stride scaling key "{stride_scaling}" is not in the Stride Scaling '
+            f"Function dictionary. {stride_scaling_string}"
         )
 
-    gradient_scaling = GRADIENT_SCALING_FUNCTION_DICT[gradient_scaling]
+    stride_scaling = STRIDE_SCALING_FUNCTION_DICT[stride_scaling]
 
     if not isinstance(epsilon, float):
         raise TypeError(
@@ -101,26 +101,26 @@ def clean_gradient_descent_arguments(
             f"Expected argument verbosity to be a str, instead it is {type(verbosity)}."
         )
 
-    if verbosity not in constants.GRADIENT_DESCENT_VERBOSITY_DICT:
-        verbosity_dict_length = len(constants.GRADIENT_DESCENT_VERBOSITY_DICT)
+    if verbosity not in constants.NEWTON_RAPHSON_VERBOSITY_DICT:
+        verbosity_dict_length = len(constants.NEWTON_RAPHSON_VERBOSITY_DICT)
 
         if verbosity_dict_length == 0:
             verbosity_string = "There are no keys available."
         elif verbosity_dict_length == 1:
-            _key = list(constants.GRADIENT_DESCENT_VERBOSITY_DICT.keys())[0]
+            _key = list(constants.NEWTON_RAPHSON_VERBOSITY_DICT.keys())[0]
             verbosity_string = f"The only available key is {_key}."
         else:
-            _keys = list(sorted(constants.GRADIENT_DESCENT_VERBOSITY_DICT.keys()))
+            _keys = list(sorted(constants.NEWTON_RAPHSON_VERBOSITY_DICT.keys()))
             verbosity_string = "The available keys are "
             verbosity_string += ", ".join([str(x) for x in _keys[:-1]])
             verbosity_string += f" and {_keys[-1]}."
 
         raise KeyError(
-            f'Verbosity key "{verbosity}" is not in the Gradient Descent Verbosity '
+            f'Verbosity key "{verbosity}" is not in the Newton-Raphson Verbosity '
             f"dictionary. {verbosity_string}"
         )
 
-    verbosity = constants.GRADIENT_DESCENT_VERBOSITY_DICT[verbosity]
+    verbosity = constants.NEWTON_RAPHSON_VERBOSITY_DICT[verbosity]
 
     if not isinstance(decimal_precision, int):
         raise TypeError(
@@ -137,7 +137,7 @@ def clean_gradient_descent_arguments(
     return (
         function,
         start,
-        gradient_scaling,
+        stride_scaling,
         epsilon,
         max_iterations_without_improvement,
         verbosity,
@@ -145,7 +145,7 @@ def clean_gradient_descent_arguments(
     )
 
 
-def __print_gds_values(
+def __print_nrs_values(
     function: Function,
     point: np.ndarray,
     verbosity: int,
@@ -164,10 +164,10 @@ def __print_gds_values(
         print(f"F(x' = {point_string}) = {point_value}")
 
 
-def gradient_descent_search(
+def newton_raphson_search(
     function: Function,
     start: np.ndarray,
-    gradient_scaling: Optional[str] = None,
+    stride_scaling: Optional[str] = None,
     epsilon: float = 1e-6,
     max_iterations_without_improvement: int = 100,
     verbosity: Optional[str] = None,
@@ -176,15 +176,15 @@ def gradient_descent_search(
     (
         function,
         start,
-        gradient_function,
+        stride_function,
         epsilon,
         max_iterations_without_improvement,
         verbosity,
         decimal_precision,
-    ) = clean_gradient_descent_arguments(
+    ) = clean_newton_raphson_arguments(
         function=function,
         start=start,
-        gradient_scaling=gradient_scaling,
+        stride_scaling=stride_scaling,
         epsilon=epsilon,
         max_iterations_without_improvement=max_iterations_without_improvement,
         verbosity=verbosity,
@@ -200,20 +200,28 @@ def gradient_descent_search(
 
     while iterations_without_improvement < max_iterations_without_improvement:
         gradient_in_current_point = function.derivative(current_point)
+        hesse_in_current_point = function.derivative.derivative(current_point)
 
-        if np.linalg.norm(gradient_in_current_point) < epsilon:
+        hesse_inverse = np.linalg.inv(hesse_in_current_point)
+
+        # The reason we're not doing H^-1 @ grad is because it
+        # would give us a column vector, and we're working with
+        # rows by default.
+        stride = gradient_in_current_point @ hesse_inverse
+
+        if np.linalg.norm(stride) < epsilon:
             timed_out = False
             break
 
-        resolved_gradient = gradient_function(
-            gradient_in_current_point,
+        resolved_stride = stride_function(
+            stride,
             function=function,
             current_point=current_point,
         )
 
-        current_point = current_point - resolved_gradient
+        current_point = current_point - resolved_stride
 
-        __print_gds_values(
+        __print_nrs_values(
             function=function,
             point=current_point,
             verbosity=verbosity,
@@ -230,7 +238,7 @@ def gradient_descent_search(
 
     if timed_out:
         print(
-            f"Gradient descent timed out after {max_iterations_without_improvement} "
+            f"Newton-Raphson timed out after {max_iterations_without_improvement} "
             "iterations passed with no improvement.",
             file=sys.stderr,
         )

@@ -40,3 +40,9 @@ GRADIENT_DESCENT_VERBOSITY_DICT = {
     "point only": 1,
     "full": 2,
 }
+
+NEWTON_RAPHSON_VERBOSITY_DICT = {
+    "none": 0,
+    "point only": 1,
+    "full": 2,
+}

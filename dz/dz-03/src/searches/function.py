@@ -129,26 +129,15 @@ class Function:
 
         return call_result
 
-    def reset(self, function_object: Optional[Callable] = None):
+    def reset(self):
         """
-        Resets the internal function object call counter to 0 and changes the internal
-        function object to a new one, if provided.
-
-        Args:
-            function_object (Optional[Callable], optional): A callable object you wish
-            to replace the internal function object with. Defaults to None (no change
-            of the internal function object).
-
-        Raises:
-            ValueError: Raised if a function object was passed, but it isn't callable.
+        Resets the internal function object call counter to 0.
         """
-        if function_object is not None:
-            if not callable(function_object):
-                raise ValueError("Argument function_object must be callable!")
-
-            self._function_object = function_object
 
         self._call_count = 0
+
+        if self._derivative is not None:
+            self._derivative.reset()
 
     def get_deepcopy(self) -> "Function":
         """
