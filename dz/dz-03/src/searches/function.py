@@ -39,7 +39,7 @@ class Function:
         self._function_object = copy.deepcopy(function_object)
         self._call_count = 0
 
-        self.derivative: Optional[Function] = None
+        self._derivative: Optional[Function] = None
 
     @property
     def function_object(self) -> Callable:
@@ -72,6 +72,29 @@ class Function:
             int: Whatever call_count returns.
         """
         return self.call_count
+
+    @property
+    def derivative(self) -> "Function":
+        """
+        The derivative property.
+
+        Returns:
+            Function: A Function representing the derivative of the function object.
+        """
+        return self._derivative
+
+    @derivative.setter
+    def derivative(self, value: "Function"):
+        """
+        A derivative setter. Setting a value successfully will get the deep copy and
+        reset its counter.
+
+        Args:
+            value (Function): A Function representing the derivative you wish to assign
+            to this function.
+        """
+        if isinstance(value, Function):
+            self._derivative = value.get_new()
 
     def call(self, *args, **kwargs) -> Any:
         """
