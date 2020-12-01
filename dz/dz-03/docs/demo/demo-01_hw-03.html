@@ -14487,7 +14487,7 @@ $$
 </div>
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
@@ -14509,27 +14509,6 @@ $$
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>/mnt/data/projekti/faks/AIPR/dz/dz-03
-</pre>
-</div>
-</div>
-
-</div>
-
 </div>
 
 </div>
@@ -14725,6 +14704,7 @@ $$
         <span class="p">]</span>
     <span class="p">)</span>
 <span class="p">)</span>
+<span class="n">f4_derivative</span><span class="o">.</span><span class="n">derivative</span> <span class="o">=</span> <span class="n">f4_hesse</span>
 <span class="n">f4</span><span class="o">.</span><span class="n">derivative</span> <span class="o">=</span> <span class="n">f4_derivative</span>
 
 <span class="n">f4_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
@@ -15038,7 +15018,7 @@ $$
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>Odgovor</strong>: Iz rezultata je jednostavno zaključiti da algoritam ne konvergira naivnim pristupom određivanja gradijenta. Konvergencija se događa samo kada odaberemo optimalan korak. U slučaju gdje ga normaliziramo, pretraga zapne. U slučaju kada ostavimo gradijent takav kakav je, zapnemo u nekoj drugoj točki dosta veće vrijednosti od slučaja kad ga normaliziramo.</p>
+<p><strong>Odgovor</strong>: Iz rezultata je jednostavno zaključiti da algoritam ne konvergira naivnim pristupom određivanja gradijenta. Konvergencija se događa samo kada odaberemo optimalan korak. U slučaju gdje ga normaliziramo, pretraga zapne. U slučaju kada ostavimo gradijent takav kakav je, vrtimo se u krug između 2 točke koje daju gradijente suprotnog smjera.</p>
 
 </div>
 </div>
