@@ -458,8 +458,6 @@ def nelder_mead_simplex_search(
     simplex_points = __get_simplex_points(start=start, stride=stride)
     simplex_values = np.array([function(x) for x in simplex_points])
 
-    timed_out = True
-
     expansion_method = __expand_jakobovic if use_jakobovic_expand else __expand
 
     for _ in range(max_iterations):
@@ -536,15 +534,7 @@ def nelder_mead_simplex_search(
             centroid_value=function(centroid),
             epsilon=epsilon,
         ):
-            timed_out = False
             break
-
-    if timed_out:
-        print(
-            f"WARNING: Nelder Mead Simplex Search timed out after {max_iterations} "
-            "iterations - result might not be a minimum.",
-            file=sys.stderr,
-        )
 
     # Do this to get a more precise result
     maximum_index = np.argmax(simplex_values)

@@ -238,8 +238,9 @@ def newton_raphson_search(
 
     if timed_out:
         print(
-            f"Newton-Raphson timed out after {max_iterations_without_improvement} "
-            "iterations passed with no improvement.",
+            "WARNING: Newton-Raphson timed out after "
+            f"{max_iterations_without_improvement} iterations passed with no "
+            "improvement - result might not be a minimum.",
             file=sys.stderr,
         )
 

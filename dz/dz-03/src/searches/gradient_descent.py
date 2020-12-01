@@ -230,8 +230,9 @@ def gradient_descent_search(
 
     if timed_out:
         print(
-            f"Gradient descent timed out after {max_iterations_without_improvement} "
-            "iterations passed with no improvement.",
+            "WARNING: Gradient descent timed out after "
+            f"{max_iterations_without_improvement} iterations passed with no "
+            "improvement - result might not be a minimum.",
             file=sys.stderr,
         )
 

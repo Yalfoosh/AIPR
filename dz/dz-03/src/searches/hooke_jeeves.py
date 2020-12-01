@@ -379,8 +379,6 @@ def hooke_jeeves_search(
     base_point = copy.deepcopy(start)
     search_start_point = copy.deepcopy(start)
 
-    timed_out = True
-
     for _ in range(max_iterations):
         current_point = __survey(function, search_start_point, stride)
 
@@ -402,14 +400,6 @@ def hooke_jeeves_search(
             search_start_point = copy.deepcopy(base_point)
 
         if __time_to_stop(stride, min_stride):
-            timed_out = False
             break
-
-    if timed_out:
-        print(
-            f"WARNING: Hooke-Jeeves Search timed out after {max_iterations} iterations "
-            "- result might not be a minimum.",
-            file=sys.stderr,
-        )
 
     return base_point
