@@ -54,9 +54,8 @@ class BinaryEncoder(Module):
     ):
         self.__dim, self.__interval = self.__check_init_args(dim=dim, interval=interval)
 
-        max_int = int(2 ** dim)
-        self.__quantum = (interval[1] - interval[0]) / max_int
-        self.__max_value = max_int - 1
+        self.__max_value = int(2 ** dim) - 1
+        self.__quantum = (interval[1] - interval[0]) / self.max_value
 
     @property
     def dim(self):
@@ -137,9 +136,8 @@ class BinaryDecoder(Module):
             [int(2 ** i) for i in range(self.dim)], dtype=np.int32
         )
 
-        max_int = int(2 ** dim)
-        self.__quantum = (interval[1] - interval[0]) / max_int
-        self.__max_value = max_int - 1
+        self.__max_value = int(2 ** dim) - 1
+        self.__quantum = (interval[1] - interval[0]) / self.max_value
 
     @property
     def dim(self):
@@ -150,12 +148,12 @@ class BinaryDecoder(Module):
         return self.__interval
 
     @property
-    def quantum(self):
-        return self.__quantum
-
-    @property
     def max_value(self):
         return self.__max_value
+
+    @property
+    def quantum(self):
+        return self.__quantum
 
     def apply(self, x):
         x_int = bin2dec_vector(x)
