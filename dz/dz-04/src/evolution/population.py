@@ -1,6 +1,7 @@
 import copy
 from typing import Any, Iterable, List, Optional, Tuple, Union
 
+import numpy as np
 from sortedcontainers import SortedList
 
 from .function import Function
@@ -44,6 +45,9 @@ class Specimen:
 
     def __str__(self):
         return f"[{self.wellness}] {self.element}"
+
+    def __repr__(self):
+        return str(self)
 
 
 class SpecimenGenerator:
@@ -265,8 +269,19 @@ class Population:
 
         self.cull()
 
-    def __getitem__(self, key: int):
-        return self.__content[key]
+    def __getitem__(self, key: Union[int, Iterable]):
+        try:
+            return self.__content[int(key)]
+        except Exception:
+            try:
+                iter(key)
+
+                return np.array([self[x] for x in key])
+            except TypeError:
+                raise ValueError(
+                    "Expected argument key to be an int or an iterable, instead it is "
+                    f"{type(key)}."
+                )
 
     def __len__(self):
         return len(self.__content)

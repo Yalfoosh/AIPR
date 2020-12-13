@@ -132,9 +132,6 @@ class BinaryDecoder(Module):
         self, dim: int, interval: Union[Tuple[Union[float, int], Union[float, int]]]
     ):
         self.__dim, self.__interval = self.__check_init_args(dim=dim, interval=interval)
-        self.__coefficients = np.array(
-            [int(2 ** i) for i in range(self.dim)], dtype=np.int32
-        )
 
         self.__max_value = int(2 ** dim) - 1
         self.__quantum = (interval[1] - interval[0]) / self.max_value
