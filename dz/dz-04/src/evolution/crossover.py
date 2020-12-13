@@ -114,7 +114,7 @@ class XORTransformedCrossover(Module):
 
         self._weight = weight
         self._bias = bias
-        self._function = np.vectorize(lambda x: int(x * weight + bias) % 2)
+        self._function = np.vectorize(lambda x: int(x * self.weight + self.bias) % 2)
         self._crossover = XORCrossover()
 
     @property
