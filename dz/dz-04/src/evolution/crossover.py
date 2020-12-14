@@ -94,6 +94,9 @@ class ANDCrossover(Crossover):
     def apply(self, parents: np.ndarray):
         return np.array([np.product(parents, axis=0)])
 
+    def __str__(self):
+        return "ANDCrossover operator"
+
 
 class XORCrossover(Crossover):
     def apply(self, parents: np.ndarray):

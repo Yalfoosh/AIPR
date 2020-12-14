@@ -10,7 +10,7 @@ Aktivirajte okruženje, npr. `conda activate env_name`. Pozicionirajte se u kori
 
 ## Pokretanje
 
-Uđite u `demo` direktorij. Pokrenite `jupyter notebook`. Otvorite `demo-01_hw-04.ipynb`.
+Uđite u `demo` direktorij. Pokrenite `jupyter notebook`. Otvorite `demo-06_hw-04.ipynb`.
 
 ## Razgledavanje
 
