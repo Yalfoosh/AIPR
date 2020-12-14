@@ -1,4 +1,5 @@
 import copy
+from typing import Tuple
 
 import numpy as np
 
@@ -7,9 +8,13 @@ from .module import Module
 from .population import Population
 
 
-class TournamentSelection(Module):
+class Selection(Module):
+    pass
+
+
+class TournamentSelection(Selection):
     @staticmethod
-    def __check_init_args(tournament_size: int):
+    def __check_init_args(tournament_size: int, n_winners: int):
         if not isinstance(tournament_size, int):
             raise TypeError(
                 "Expected argument tournament_size to be an int, instead it is "
@@ -22,44 +27,58 @@ class TournamentSelection(Module):
                 f"it is {tournament_size}."
             )
 
-        return tournament_size
+        if not isinstance(n_winners, int):
+            raise TypeError(
+                "Expected argument n_winners to be an int, instead it is "
+                f"{n_winners}."
+            )
 
-    def __init__(self, tournament_size: int = 3):
-        tournament_size = self.__check_init_args(tournament_size)
+        if n_winners < 1:
+            raise ValueError(
+                "Expected argument n_winners to be a positive integer, instead "
+                f"it is {n_winners}."
+            )
+
+        if n_winners > tournament_size:
+            raise ValueError(
+                "Expected argument n_winners to be less or equal to the tournament "
+                f"size ({tournament_size}), instead it is {n_winners}."
+            )
+
+        return tournament_size, n_winners
+
+    def __init__(self, tournament_size: int = 3, n_winners: int = 2):
+        tournament_size, n_winners = self.__check_init_args(tournament_size, n_winners)
 
         self._tournament_size = tournament_size
+        self._n_winners = n_winners
 
     @property
     def tournament_size(self):
         return self._tournament_size
 
-    def apply(self, population: Population, n_winners: int = 2):
-        if len(population) < self.tournament_size:
-            raise RuntimeError(
-                "Expected argument population to be at least as big as the "
-                f"tournament size ({self.tournament_size}), instead it is of length "
-                f"{len(population)}."
-            )
+    @property
+    def n_winners(self):
+        return self._n_winners
 
-        if self.tournament_size < n_winners:
-            raise RuntimeError(
-                "Expected argument n_winners to be less or equal to tournament_size "
-                f"({self.tournament_size}), instead it is {n_winners}."
-            )
-
+    def apply(self, population: Population) -> Tuple[np.ndarray, np.ndarray]:
         if len(population) == 0:
             return np.array([]), np.array([])
 
         participants = np.random.choice(
             len(population), self.tournament_size, replace=False
         )
+        participants = np.sort(participants)
 
-        if self.tournament_size == n_winners:
+        if self.tournament_size == self.n_winners:
             winners = copy.deepcopy(participants)
         else:
-            winners = participants[np.argpartition(participants, n_winners)[:n_winners]]
+            winners = participants[: self.n_winners]
 
         return participants, winners
 
     def __str__(self):
-        return f"TournamentSelection ({self.tournament_size}-tournament)"
+        return (
+            f"TournamentSelection ({self.tournament_size}-tournament, {self.n_winners} "
+            "win)"
+        )

@@ -39,10 +39,6 @@ class Mutation(Module):
     def mutation_probability(self):
         return self._mutation_probability
 
-    @property
-    def p(self):
-        return self.mutation_probability
-
 
 class MutationInsideInterval(Mutation):
     @staticmethod

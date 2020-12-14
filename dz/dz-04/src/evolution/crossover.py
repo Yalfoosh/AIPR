@@ -6,7 +6,11 @@ from .module import Module
 from .population import Specimen
 
 
-class CrossoverInsideInterval(Module):
+class Crossover(Module):
+    pass
+
+
+class CrossoverInsideInterval(Crossover):
     @staticmethod
     def __check_init_args(
         interval: Optional[Tuple[Union[float, int], Union[float, int]]]
@@ -86,15 +90,20 @@ class ChooseOneCrossover(CrossoverInsideInterval):
         return "ChooseOneCrossover operator"
 
 
-class XORCrossover(Module):
+class ANDCrossover(Crossover):
     def apply(self, parents: np.ndarray):
-        return np.sum(parents, axis=0) % 2
+        return np.array([np.product(parents, axis=0)])
+
+
+class XORCrossover(Crossover):
+    def apply(self, parents: np.ndarray):
+        return np.array([np.sum(parents, axis=0) % 2])
 
     def __str__(self):
         return "XORCrossover operator"
 
 
-class XORTransformedCrossover(Module):
+class XORTransformedCrossover(Crossover):
     @staticmethod
     def __check_init_args(weight: float, bias: float):
         if not isinstance(weight, float):

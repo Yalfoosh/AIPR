@@ -221,10 +221,10 @@ class Population:
         if not isinstance(specimen, Specimen):
             try:
                 specimen = self.specimen_generator(specimen)
-            except Exception:
+            except Exception as e:
                 raise TypeError(
                     "Expected argument speciment to be a Specimen, instead it is "
-                    f"{type(specimen)}."
+                    f"{type(specimen)}. Or {e}. One of those."
                 )
 
         self.__content.add(specimen)
